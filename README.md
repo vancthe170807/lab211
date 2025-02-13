@@ -1,2 +1,5 @@
-# lab211
-This repository has stored Document and Project code of subject LAB211 in FPT University
+# OOP with Java Lab - LAB211
+
+| Assignment Code | Name of Assignment | LOC | Status of Assignment |
+|---|---|---|---|
+
