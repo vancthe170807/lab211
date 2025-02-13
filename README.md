@@ -5,8 +5,8 @@
 | J1.L.P0021| Create a Java console program to manage students.| 150| Not Started|
 | J1.L.P0023| Create a Java console program to manage a Fruit Shop (Product and Shopping).| 175| Not Started|
 | J1.S.P0001| Bubble sort algorithm.| 40| Not Started|
-| J1.S.P0011| Change base number system (16, 10, 2) program. | 100| Done|
-| J1.S.P0051| Develop a computer program.  | 61| Not Started|
+| J1.S.P0011| Change base number system (16, 10, 2) program. | 100| Not Started|
+| J1.S.P0051| Develop a computer program.  | 61| Done|
 | J1.S.P0052| Write a program to manage the geographic. | 69| Not Started|
 | J1.S.P0055| Doctor management program. | 73| Not Started|
 | J1.S.P0057| User management system. | 56| Not Started|
