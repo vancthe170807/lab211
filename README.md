@@ -10,8 +10,8 @@
 | J1.L.P0023| Create a Java console program to manage a Fruit Shop (Product and Shopping).| 175| ❌|
 | J1.S.P0001| Bubble sort algorithm.| 40| ✅|
 | J1.S.P0002| Selection sort algorithm.| 40| ✅|
-| J1.S.P0003| Insertion sort algorithm. | 40| ❌|
-| J1.S.P0004| Quick sort algorithm. | 70| ❌|
+| J1.S.P0003| Insertion sort algorithm. | 40| ✅|
+| J1.S.P0004| Quick sort algorithm. | 70| ✅|
 | J1.S.P0005| Merge sort algorithm. | 70| ❌|
 | J1.S.P0006| Binary search algorithm. | 70| ❌|
 | J1.S.P0007| Undirected graphs representation. | 70| ❌|
