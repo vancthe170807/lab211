@@ -18,6 +18,7 @@ public class Main {
                     break;
                 case 3:
                     // Exit the program
+                    System.out.println("===== END PROGRAM =====");
                     return;
             }
         }

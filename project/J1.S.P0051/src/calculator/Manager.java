@@ -7,6 +7,7 @@ public class Manager {
 
     //display menu
     public static int menu() {
+        System.out.println("===== [LAB211] J1.S.P0051 - DEVELOP A COMPUTER PROGRAM. =====");
         System.out.println("======== Calculator Program ========");
         System.out.println("1. Normal Calculator");
         System.out.println("2. BMI Calculator");
