@@ -12,7 +12,7 @@
 | J1.S.P0002| Selection sort algorithm.| 40| ✅|
 | J1.S.P0003| Insertion sort algorithm. | 40| ✅|
 | J1.S.P0004| Quick sort algorithm. | 70| ✅|
-| J1.S.P0005| Merge sort algorithm. | 70| ❌|
+| J1.S.P0005| Merge sort algorithm. | 70| ✅|
 | J1.S.P0006| Binary search algorithm. | 70| ❌|
 | J1.S.P0007| Undirected graphs representation. | 70| ❌|
 | J1.S.P0008| Letter and character count. | 50| ❌|
