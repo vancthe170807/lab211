@@ -16,7 +16,7 @@
 | J1.S.P0006| Binary search algorithm. | 70| ✅|
 | J1.S.P0007| Undirected graphs representation. | 70| ❌|
 | J1.S.P0008| Letter and character count. | 50| ❌|
-| J1.S.P0009| Fibonacci. | 50| ❌|
+| J1.S.P0009| Fibonacci. | 50| ✅|
 | J1.S.P0010| Linear search. | 50| ❌|
 | J1.S.P0011| Change base number system (16, 10, 2) program. | 100| ❌|
 | J1.S.P0050| Solving the equation, find the square numbers, even numbers, and odd numbers.  | 72| ❌|
