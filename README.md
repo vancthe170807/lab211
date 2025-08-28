@@ -5,7 +5,7 @@
 </div>
 
 | Assignment Code | Name of Assignment | LOC | Code | Status of Assignment |
-|---|---|---|---|
+|---|---|---|---|---|
 | J1.L.P0021| Create a Java console program to manage students.| 150 |[Code]| ❌|
 | J1.L.P0023| Create a Java console program to manage a Fruit Shop (Product and Shopping).| 175|[Code]| ❌|
 | J1.S.P0001| Bubble sort algorithm.| 40|[Code](https://github.com/vancthe170807/lab211/tree/main/project/J1.S.P0001)| ✅|
