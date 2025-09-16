@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="AutoImportSettings">
-    <option name="autoReloadType" value="SELECTIVE" />
-  </component>
   <component name="ChangeListManager">
-    <list default="true" id="7fa44b18-0e3f-4494-aaf0-691a63b17a1c" name="Changes" comment="">
+    <list default="true" id="7def5adb-aa7d-4d42-853b-8c171930850d" name="Changes" comment="">
       <change afterPath="$PROJECT_DIR$/src/Entity/Fruit.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/Entity/Order.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/Manager/Main.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/Manager/Manager.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/Manager/Validation.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../J1.S.P0051/.idea/copilot.data.migration.agent.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../J1.S.P0051/.idea/copilot.data.migration.edit.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../J1.S.P0001/src/Validate.java" beforeDir="false" afterPath="$PROJECT_DIR$/../J1.S.P0001/src/Validate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,26 +20,22 @@
   <component name="ProjectColorInfo"><![CDATA[{
   "associatedIndex": 3
 }]]></component>
-  <component name="ProjectId" id="32mp5mvzDgbP7IFmLpVB0nqQeKF" />
+  <component name="ProjectId" id="32ms5ScySP6vPF3muw9tuFGDJla" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
     "Application.Main.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "c941f2f2",
+    "git-widget-placeholder": "main",
     "last_opened_file_path": "D:/Learning_Document/Term_3/LAB211/lab211/project/J1.L.P0023/src",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "onboarding.tips.debug.path": "D:/Learning_Document/Term_3/LAB211/lab211/project/J1.L.P0023/src/Main.java",
-    "run.code.analysis.last.selected.profile": "pProject Default",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -63,12 +54,12 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="7fa44b18-0e3f-4494-aaf0-691a63b17a1c" name="Changes" comment="" />
-      <created>1758035423948</created>
+      <changelist id="7def5adb-aa7d-4d42-853b-8c171930850d" name="Changes" comment="" />
+      <created>1758036901286</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1758035423948</updated>
-      <workItem from="1758035425213" duration="1128000" />
+      <updated>1758036901286</updated>
+      <workItem from="1758036902407" duration="296000" />
     </task>
     <servers />
   </component>
