@@ -42,19 +42,20 @@
     Dưới đây là cách thực hiện:
 
     ```java
-    public class Fibonacci {
+    public class Main {
         public static void main(String[] args) {
-            System.out.println("Fibonacci Series:");
-            fibonnaciHelper(45, 1, 0, 1); // Bắt đầu với số thứ tự là 1
-            System.out.println("\nEnd of Series");
+            System.out.println("===== [LAB211] J1.S.P0009 - FIBONACCI =====");
+            System.out.println("The 45 sequence fibonacci: ");
+            fibonacciHelper(46, 0, 1, 1); // Bắt đầu với số thứ tự là 1
+            System.out.println("\n===== END =====");
         }
-
-        public static int fibonnaciHelper(int term, int higher, int lower, int index) {
+    
+        public static int fibonacciHelper(int term, int higher, int lower, int index) {
             if (term < 2) {
                 return higher;
             } else {
-                System.out.print(index + ": " + higher + " "); // In số thứ tự cùng với giá trị Fibonacci
-                return fibonnaciHelper(term - 1, higher + lower, higher, index + 1); // Tăng số thứ tự lên 1
+                System.out.println(index + ": " + higher + " "); // In số thứ tự cùng với giá trị Fibonacci
+                return fibonacciHelper(term - 1, higher + lower, higher, index + 1); // Tăng số thứ tự lên 1
             }
         }
     }
