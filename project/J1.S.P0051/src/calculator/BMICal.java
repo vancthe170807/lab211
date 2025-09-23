@@ -45,7 +45,7 @@ public class BMICal {
         System.out.print("Enter Height(cm): ");
         double height = Validate.possitiveNumber();
         double bmi = weight * 10000 / (height * height);
-        System.out.printf("BMI number: %.2f\n", bmi);
+        System.out.printf("BMI number: %.2f%n", bmi);
         System.out.println("BMI Status: " + BMIStatus(bmi));
     }
 }
