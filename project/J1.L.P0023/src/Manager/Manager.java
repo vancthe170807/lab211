@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 /**
- *
  * @author THAYCACAC
  */
 public class Manager {
@@ -63,24 +62,52 @@ public class Manager {
     }
 
     //allow user buy items
+    //allow user buy items
     static void shopping(ArrayList<Fruit> lf, Hashtable<String, ArrayList<Order>> ht) {
         //check list empty user can't buy
         if (lf.isEmpty()) {
             System.err.println("No have item.");
             return;
         }
+
         //loop until user don't want to buy continue
         ArrayList<Order> lo = new ArrayList<>();
         while (true) {
             displayListFruit(lf);
-            System.out.print("Enter item: ");
+
+            // nếu toàn bộ quantity = 0 thì không còn hàng
+            boolean hasFruit = false;
+            for (Fruit f : lf) {
+                if (f.getQuantity() > 0) {
+                    hasFruit = true;
+                    break;
+                }
+            }
+            if (!hasFruit) {
+                System.err.println("All fruits are sold out.");
+                break;
+            }
+
+            System.out.print("Enter item from 1 to " + lf.size() + ": ");
             int item = Validation.checkInputIntLimit(1, lf.size());
             Fruit fruit = getFruitByItem(lf, item);
+
+            // kiểm tra null an toàn
+            if (fruit == null) {
+                System.err.println("Invalid item. Please try again.");
+                continue;
+            }
+
+            //display fruit user choose
+            System.out.println("You choose: " + fruit.getFruitName());
+
+            //check quantity of fruit
             System.out.print("Enter quantity: ");
             int quantity = Validation.checkInputIntLimit(1, fruit.getQuantity());
             fruit.setQuantity(fruit.getQuantity() - quantity);
+
             //check item exist or not
-            if (!Validation.checkItemExist(lo, fruit.getFruitId())) {
+            if (Validation.checkItemExist(lo, fruit.getFruitId())) {
                 updateOrder(lo, fruit.getFruitId(), quantity);
             } else {
                 lo.add(new Order(fruit.getFruitId(), fruit.getFruitName(),
@@ -91,53 +118,70 @@ public class Manager {
                 break;
             }
         }
+
+        if (lo.isEmpty()) {
+            System.err.println("No order created.");
+            return;
+        }
+
         displayListOrder(lo);
         System.out.print("Enter name: ");
         String name = Validation.checkInputString();
         ht.put(name, lo);
-        System.err.println("Add successfull");
+        System.err.println("Add successful");
     }
+
 
     //display list fruit in shop
     static void displayListFruit(ArrayList<Fruit> lf) {
         int countItem = 1;
-        System.out.printf("%-10s%-20s%-20s%-15s\n", "Item", "Fruit name", "Origin", "Price");
+        String border = "+------------+--------------------+------------------+-------------------+";
+        String header = String.format("|%-12s|%-20s|%-18s|%-19s|", "Item", "Fruit name", "Origin", "Price");
+        System.out.println(border);
+        System.out.println(header);
+        System.out.println(border);
         for (Fruit fruit : lf) {
-            //check shop have item or not 
             if (fruit.getQuantity() != 0) {
-                System.out.printf("%-10d%-20s%-20s%-15.0f$\n", countItem++,
-                        fruit.getFruitName(), fruit.getOrigin(), fruit.getPrice());
+                System.out.printf("|%-12d|%-20s|%-18s|%-18.0f$|\n",
+                        countItem++, fruit.getFruitName(), fruit.getOrigin(), fruit.getPrice());
             }
         }
+        System.out.println(border);
     }
 
     //get fruint user want to by
     static Fruit getFruitByItem(ArrayList<Fruit> lf, int item) {
         int countItem = 1;
         for (Fruit fruit : lf) {
-            //check shop have item or not 
             if (fruit.getQuantity() != 0) {
+                if (countItem == item) {
+                    return fruit;
+                }
                 countItem++;
-            }
-            if (countItem - 1 == item) {
-                return fruit;
             }
         }
         return null;
     }
 
-    //display list order
+
     static void displayListOrder(ArrayList<Order> lo) {
         double total = 0;
-        System.out.printf("%15s%15s%15s%15s\n", "Product", "Quantity", "Price", "Amount");
+        String border = "+----------------+----------+----------+----------+";
+        String header = String.format("|%-16s|%-10s|%-10s|%-10s|", "Product", "Quantity", "Price", "Amount");
+        System.out.println(border);
+        System.out.println(header);
+        System.out.println(border);
         for (Order order : lo) {
-            System.out.printf("%15s%15d%15.0f$%15.0f$\n", order.getFruitName(),
-                    order.getQuantity(), order.getPrice(),
-                    order.getPrice() * order.getQuantity());
-            total += order.getPrice() * order.getQuantity();
+            double amount = order.getPrice() * order.getQuantity();
+            System.out.printf("|%-16s|%-10d|%-9.0f$|%-9.0f$|\n",
+                    order.getFruitName(), order.getQuantity(), order.getPrice(), amount);
+            total += amount;
         }
-        System.out.println("Total: " + total);
+        System.out.println(border);
+        System.out.printf("|%-38s|%-9.0f$|\n", "Total", total);
+        System.out.println(border);
     }
+
 
     //if order exist then update order
     static void updateOrder(ArrayList<Order> lo, String id, int quantity) {
