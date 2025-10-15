@@ -1,95 +1,88 @@
 public class Matrix {
+    private int[][] matrix;
+    private int rows;
+    private int cols;
 
-    public int[][] inputMatrix(int n) {
-        Validation validation = new Validation();
-        int row = validation.checkInputInt("Enter Row Matrix: ");
-        int col = validation.checkInputInt("Enter Colum Matrix: ");
-        int[][] matrix = new int[row][col];
-        for (int i = 0; i < row; i++) {
-            for (int j = 0; j < col; j++) {
-                matrix[i][j] = validation.checkInputInt("Enter Matrix" + n + "[" + (i+1) + "]" + "[" + (j+1) + "]:");
-            }
+    public Matrix(int[][] matrix) {
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+            throw new IllegalArgumentException("Value of matrix is digit");
         }
-        return matrix;
+        this.matrix = matrix;
+        this.rows = matrix.length;
+        this.cols = matrix[0].length;
     }
 
-    public void displayMatrix(int[][] matrix) {
-        int row = matrix.length;
-        int col = matrix[0].length;
-        for (int i = 0; i < row; i++) {
-            for (int j = 0; j < col; j++) {
-                System.out.print("[" + matrix[i][j] + "]");
-            }
-            System.out.println();
-        }
+    public int getRows() {
+        return rows;
     }
 
-    public int[][] additionMatrix(int[][] matrix1, int[][] matrix2) {
-        System.out.println("-------- Result --------");
-        displayMatrix(matrix1);
-        System.out.println("+");
-        displayMatrix(matrix2);
-        System.out.println("=");
-        int row = matrix1.length;
-        int col = matrix1[0].length;
-
-        int[][] result = new int[row][col];
-        for (int i = 0; i < row; i++) {
-            for (int j = 0; j < col; j++) {
-                result[i][j] = matrix1[i][j] + matrix2[i][j];
-                System.out.print("[" + result[i][j] + "]");
-            }
-            System.out.println();
-        }
-        return result;
+    public void setRows(int rows) {
+        this.rows = rows;
     }
 
-    public int[][] subtractionMatrix(int[][] matrix1, int[][] matrix2) {
-        System.out.println("-------- Result --------");
-        displayMatrix(matrix1);
-        System.out.println("-");
-        displayMatrix(matrix2);
-        System.out.println("=");
-        int row = matrix1.length;
-        int col = matrix1[0].length;
-
-        int[][] result = new int[row][col];
-        for (int i = 0; i < row; i++) {
-            for (int j = 0; j < col; j++) {
-                result[i][j] = matrix1[i][j] - matrix2[i][j];
-                System.out.print("[" + result[i][j] + "]");
-            }
-            System.out.println();
-        }
-        return result;
+    public int getCols() {
+        return cols;
     }
 
-    public int[][] multiplicationMatrix(int[][] matrix1, int[][] matrix2) {
-        System.out.println("-------- Result --------");
-        // Display the matrices 1
-        displayMatrix(matrix1);
-        System.out.println("*");
-        displayMatrix(matrix2);
-        System.out.println("=");
-        int row1 = matrix1.length;
-        int col1 = matrix1[0].length;
-        int row2 = matrix2.length;
-        int col2 = matrix2[0].length;
-        if (col1 != row2) {
-            System.err.println("Can't multiply");
-            return null;
+    public void setCols(int cols) {
+        this.cols = cols;
+    }
+
+    public Matrix additionalMatrix(Matrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) {
+            throw new IllegalArgumentException("Matrices must have the same dimensions for addition.");
         }
-        int[][] matrixResult = new int[row1][col2];
-        for (int i = 0; i < row1; i++) {
-            for (int j = 0; j < col2; j++) {
-                for (int k = 0; k < col1; k++) {
-                    matrixResult[i][j] += matrix1[i][k] * matrix2[k][j];
+
+        int[][] resultMatrix = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                resultMatrix[i][j] = matrix[i][j] + other.matrix[i][j];
+            }
+        }
+        return new Matrix(resultMatrix);
+    }
+
+    public Matrix subtractMatrix(Matrix other) {
+        if (this.rows != other.rows || this.cols != other.cols) {
+            throw new IllegalArgumentException("Matrices must have the same dimensions for subtraction.");
+        }
+
+        int[][] resultMatrix = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                resultMatrix[i][j] = matrix[i][j] - other.matrix[i][j];
+            }
+        }
+        return new Matrix(resultMatrix);
+    }
+
+    public Matrix multiplicationMatrix(Matrix other) {
+        if (this.cols != other.rows) {
+            throw new IllegalArgumentException("Number of columns of the first matrix must be equal to the number of rows of the second matrix for multiplication.");
+        }
+
+        int[][] resultMatrix = new int[this.rows][other.cols];
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < other.cols; j++) {
+                for (int k = 0; k < this.cols; k++) {
+                    resultMatrix[i][j] += this.matrix[i][k] * other.matrix[k][j];
                 }
-                System.out.print("[" + matrixResult[i][j] + "]");
             }
-            System.out.println();
         }
-        return matrixResult;
+        return new Matrix(resultMatrix);
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                sb.append("[").append(matrix[i][j]).append("]");
+            }
+            if (i < rows - 1) {
+                sb.append("\n");
+            }
+        }
+        return sb.toString();
+    }
 }

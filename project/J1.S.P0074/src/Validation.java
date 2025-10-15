@@ -1,33 +1,34 @@
 import java.util.Scanner;
 
 public class Validation {
+    private final static Scanner sc = new Scanner(System.in);
 
-    private final Scanner in = new Scanner(System.in);
-
-    public int checkIntLimit(int min, int max) {
+    // Check if input is an integer number in the range [min, max]
+    public int checkIntegerLimit(int min, int max, String message) {
         while (true) {
             try {
-                int n = Integer.parseInt(in.nextLine());
-                if (n < min || n > max) {
+                System.out.print(message);
+                int result = Integer.parseInt(sc.nextLine());
+                if (result < min || result > max) {
                     throw new NumberFormatException();
                 }
-                return n;
-            } catch (NumberFormatException ex) {
-                System.err.println("Re-input");
+                return result;
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter an integer between " + min + " and " + max + ".");
             }
         }
     }
 
-    public int checkInputInt(String message) {
+    // Check if input is an integer number
+    public int checkInteger(String message) {
         while (true) {
             try {
                 System.out.print(message);
-                int result = Integer.parseInt(in.nextLine());
+                int result = Integer.parseInt(sc.nextLine());
                 return result;
-            } catch (NumberFormatException ex) {
-                System.out.println("Value of matrix is digit");
+            } catch (NumberFormatException e) {
+                System.out.println("Valid of matrix is digit");
             }
         }
-
     }
 }

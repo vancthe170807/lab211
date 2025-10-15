@@ -1,40 +1,78 @@
-
-import java.io.IOException;
-import java.util.Scanner;
-
 public class Main {
+    private static final Validation validation = new Validation();
+
     public static void main(String[] args) {
-        Matrix matrix = new Matrix();
-        Menu menu = new Menu();
-        System.out.println("----- [LAB211] J1.S.P0074 - MATRIX CALCULATOR -----");
         while (true) {
-            int choice = menu.menu();
-            switch (choice) {
-                case 1: {
-                    System.out.println("----- Addition -----");
-                    int[][] matrix1 = matrix.inputMatrix(1);
-                    int[][] matrix2 = matrix.inputMatrix(2);
-                    matrix.additionMatrix(matrix1, matrix2);
-                    break;
+            int choice = displayMenuAndGetChoice();
+            if (choice >= 1 && choice <= 3) {
+                if (choice == 1) {
+                    System.out.println("------- Addition Matrix -------");
+                } else if (choice == 2) {
+                    System.out.println("------- Subtraction Matrix -------");
+                } else {
+                    System.out.println("------- Multiplication Matrix -------");
                 }
-                case 2: {
-                    System.out.println("----- Subtraction -----");
-                    int[][] matrix1 = matrix.inputMatrix(1);
-                    int[][] matrix2 = matrix.inputMatrix(2);
-                    matrix.subtractionMatrix(matrix1, matrix2);
-                    break;
+                Matrix mtrx1 = inputMatrix(1);
+                Matrix mtrx2 = inputMatrix(2);
+
+                Matrix mtrxResult = null;
+                String operator = "";
+                try {
+                    switch (choice) {
+                        case 1:
+                            mtrxResult = mtrx1.additionalMatrix(mtrx2);
+                            operator = "+";
+                            break;
+                        case 2:
+                            mtrxResult = mtrx1.subtractMatrix(mtrx2);
+                            operator = "-";
+                            break;
+                        case 3:
+                            mtrxResult = mtrx1.multiplicationMatrix(mtrx2);
+                            operator = "*";
+                            break;
+                    }
+                    displayResult(mtrx1, mtrx2, operator, mtrxResult);
+                } catch (IllegalArgumentException e) {
+                    System.out.println(e.getMessage());
                 }
-                case 3: {
-                    System.out.println("----- Multiplication -----");
-                    int[][] matrix1 = matrix.inputMatrix(1);
-                    int[][] matrix2 = matrix.inputMatrix(2);
-                    matrix.multiplicationMatrix(matrix1, matrix2);
-                    break;
-                }
-                case 4:
-                    System.out.println("Exiting...");
-                    return;
+            } else {
+                System.out.println("Exiting the program. Goodbye!");
+                break;
             }
         }
+    }
+
+    private static int displayMenuAndGetChoice() {
+        System.out.println("======= Calculator Program =======");
+        System.out.println("1. Addition Matrix");
+        System.out.println("2. Subtraction Matrix");
+        System.out.println("3. Multiplication Matrix");
+        System.out.println("4. Quit");
+
+        return validation.checkIntegerLimit(1, 4, "Your choice: ");
+    }
+
+    private static Matrix inputMatrix(int number) {
+        int row = validation.checkInteger("Enter Row matrix " + number + ": ");
+        int col = validation.checkInteger("Enter Column matrix " + number + ": ");
+
+        int[][] matrix = new int[row][col];
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                matrix[i][j] = validation.checkInteger("Enter Matrix " + number + " [" + (i + 1) + "][" + (j + 1) + "]: ");
+
+            }
+        }
+        return new Matrix(matrix);
+    }
+
+    private static void displayResult(Matrix mtrx1, Matrix mtrx2, String operator, Matrix mtrxResult) {
+        System.out.println("-------- Result --------");
+        System.out.println(mtrx1);
+        System.out.println(operator);
+        System.out.println(mtrx2);
+        System.out.println("=");
+        System.out.println(mtrxResult);
     }
 }
