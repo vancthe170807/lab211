@@ -1,41 +1,27 @@
 public class Matrix {
     private int[][] matrix;
-    private int rows;
-    private int cols;
 
     public Matrix(int[][] matrix) {
         if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
             throw new IllegalArgumentException("Value of matrix is digit");
         }
         this.matrix = matrix;
-        this.rows = matrix.length;
-        this.cols = matrix[0].length;
-    }
-
-    public int getRows() {
-        return rows;
-    }
-
-    public void setRows(int rows) {
-        this.rows = rows;
-    }
-
-    public int getCols() {
-        return cols;
-    }
-
-    public void setCols(int cols) {
-        this.cols = cols;
     }
 
     public Matrix additionalMatrix(Matrix other) {
-        if (this.rows != other.rows || this.cols != other.cols) {
+        int rows1 = this.matrix.length;
+        int cols1 = this.matrix[0].length;
+
+        int rows2 = other.matrix.length;
+        int cols2 = other.matrix[0].length;
+
+        if (rows1 != rows2 || cols1 != cols2) {
             throw new IllegalArgumentException("Matrices must have the same dimensions for addition.");
         }
 
-        int[][] resultMatrix = new int[rows][cols];
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
+        int[][] resultMatrix = new int[rows1][cols1];
+        for (int i = 0; i < rows1; i++) {
+            for (int j = 0; j < cols1; j++) {
                 resultMatrix[i][j] = matrix[i][j] + other.matrix[i][j];
             }
         }
@@ -43,13 +29,18 @@ public class Matrix {
     }
 
     public Matrix subtractMatrix(Matrix other) {
-        if (this.rows != other.rows || this.cols != other.cols) {
+        int rows1 = this.matrix.length;
+        int cols1 = this.matrix[0].length;
+
+        int rows2 = other.matrix.length;
+        int cols2 = other.matrix[0].length;
+        if (rows1 != rows2 || cols1 != cols2) {
             throw new IllegalArgumentException("Matrices must have the same dimensions for subtraction.");
         }
 
-        int[][] resultMatrix = new int[rows][cols];
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
+        int[][] resultMatrix = new int[rows1][cols1];
+        for (int i = 0; i < rows1; i++) {
+            for (int j = 0; j < cols1; j++) {
                 resultMatrix[i][j] = matrix[i][j] - other.matrix[i][j];
             }
         }
@@ -57,14 +48,20 @@ public class Matrix {
     }
 
     public Matrix multiplicationMatrix(Matrix other) {
-        if (this.cols != other.rows) {
+        int rows1 = this.matrix.length;
+        int cols1 = this.matrix[0].length;
+
+        int rows2 = other.matrix.length;
+        int cols2 = other.matrix[0].length;
+
+        if (cols1 != rows2) {
             throw new IllegalArgumentException("Number of columns of the first matrix must be equal to the number of rows of the second matrix for multiplication.");
         }
 
-        int[][] resultMatrix = new int[this.rows][other.cols];
-        for (int i = 0; i < this.rows; i++) {
-            for (int j = 0; j < other.cols; j++) {
-                for (int k = 0; k < this.cols; k++) {
+        int[][] resultMatrix = new int[rows1][cols2];
+        for (int i = 0; i < rows1; i++) {
+            for (int j = 0; j < cols2; j++) {
+                for (int k = 0; k < cols1; k++) {
                     resultMatrix[i][j] += this.matrix[i][k] * other.matrix[k][j];
                 }
             }
@@ -75,6 +72,8 @@ public class Matrix {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
+        int rows = this.matrix.length;
+        int cols = this.matrix[0].length;
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 sb.append("[").append(matrix[i][j]).append("]");
