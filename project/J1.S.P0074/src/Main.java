@@ -12,8 +12,8 @@ public class Main {
                 } else {
                     System.out.println("------- Multiplication Matrix -------");
                 }
-                Matrix mtrx1 = inputMatrix(1);
-                Matrix mtrx2 = inputMatrix(2);
+                Matrix mtrx1 = Matrix.inputMatrix(1);
+                Matrix mtrx2 = Matrix.inputMatrix(2);
 
                 Matrix mtrxResult = null;
                 String operator = "";
@@ -32,7 +32,7 @@ public class Main {
                             operator = "*";
                             break;
                     }
-                    displayResult(mtrx1, mtrx2, operator, mtrxResult);
+                    Matrix.displayResult(mtrx1, mtrx2, operator, mtrxResult);
                 } catch (IllegalArgumentException e) {
                     System.out.println(e.getMessage());
                 }
@@ -53,26 +53,5 @@ public class Main {
         return validation.checkIntegerLimit(1, 4, "Your choice: ");
     }
 
-    private static Matrix inputMatrix(int number) {
-        int row = validation.checkInteger("Enter Row matrix " + number + ": ");
-        int col = validation.checkInteger("Enter Column matrix " + number + ": ");
 
-        int[][] matrix = new int[row][col];
-        for (int i = 0; i < row; i++) {
-            for (int j = 0; j < col; j++) {
-                matrix[i][j] = validation.checkInteger("Enter Matrix " + number + " [" + (i + 1) + "][" + (j + 1) + "]: ");
-
-            }
-        }
-        return new Matrix(matrix);
-    }
-
-    private static void displayResult(Matrix mtrx1, Matrix mtrx2, String operator, Matrix mtrxResult) {
-        System.out.println("-------- Result --------");
-        System.out.println(mtrx1);
-        System.out.println(operator);
-        System.out.println(mtrx2);
-        System.out.println("=");
-        System.out.println(mtrxResult);
-    }
 }
