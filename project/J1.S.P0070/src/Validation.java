@@ -4,11 +4,11 @@ import java.util.Scanner;
 
 public class Validation {
 
-    private final Scanner in = new Scanner(System.in);
+    private static final Scanner in = new Scanner(System.in);
 
     private static final String ACCOUNT_NUMBER_VALID = "^\\d{10}$";
 
-    public int checkInputIntLimit(int min, int max, Locale language) {
+    public static int checkInputIntLimit(int min, int max, Locale language) {
         while (true) {
             try {
                 int result = Integer.parseInt(in.nextLine());
@@ -23,7 +23,7 @@ public class Validation {
         }
     }
 
-    public String checkInputString(Locale language) {
+    public static String checkInputString(Locale language) {
         while (true) {
             String result = in.nextLine();
             if (result.isEmpty()) {
@@ -35,7 +35,7 @@ public class Validation {
         }
     }
 
-    public int checkInputAccount(Locale language) {
+    public static int checkInputAccount(Locale language) {
         while (true) {
             String result = in.nextLine();
             if (result.matches(ACCOUNT_NUMBER_VALID)) {
@@ -47,7 +47,7 @@ public class Validation {
         }
     }
 
-    public void getWordLanguage(Locale curLocate, String key) {
+    public static void getWordLanguage(Locale curLocate, String key) {
         ResourceBundle words = ResourceBundle.getBundle("Language/" + curLocate, curLocate);
         String value = words.getString(key);
         System.out.printf(value);

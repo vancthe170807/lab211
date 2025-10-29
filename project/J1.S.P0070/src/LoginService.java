@@ -14,21 +14,21 @@ public class LoginService {
     }
 
     public void login(Locale language) {
-        validation.getWordLanguage(language, "enterAccountNumber");
-        int accountNumber = validation.checkInputAccount(language);
+        Validation.getWordLanguage(language, "enterAccountNumber");
+        int accountNumber = Validation.checkInputAccount(language);
 
-        validation.getWordLanguage(language, "enterPassword");
+        Validation.getWordLanguage(language, "enterPassword");
         String passString = checkInputPassword(language);
 
         System.out.print("Captcha: ");
         String captchaGenerated = generateCaptchaText();
         while (true) {
             if (checkInputCaptcha(captchaGenerated, language)) {
-                validation.getWordLanguage(language, "loginSuccess");
+                Validation.getWordLanguage(language, "loginSuccess");
                 System.out.println();
                 return;
             } else {
-                validation.getWordLanguage(language, "errCaptchaIncorrect");
+                Validation.getWordLanguage(language, "errCaptchaIncorrect");
                 System.out.println();
             }
         }
@@ -37,7 +37,7 @@ public class LoginService {
     private String checkInputPassword(Locale language) {
         String result;
         while (true) {
-            result = validation.checkInputString(language);
+            result = Validation.checkInputString(language);
             if (isValidPassword(result, language)) {
                 return result;
             }
@@ -47,9 +47,9 @@ public class LoginService {
     private boolean isValidPassword(String password, Locale language) {
         int lengthPassword = password.length();
         if (lengthPassword < 8 || lengthPassword > 31) {
-            validation.getWordLanguage(language, "errCheckAlphanumericPassword");
+            Validation.getWordLanguage(language, "errCheckAlphanumericPassword");
             System.out.println();
-            validation.getWordLanguage(language, "enterPassword");
+            Validation.getWordLanguage(language, "enterPassword");
             return false;
         }
         int countDigit = 0;
@@ -62,9 +62,9 @@ public class LoginService {
             }
         }
         if (countDigit < 1 || countLetter < 1) {
-            validation.getWordLanguage(language, "errCheckAlphanumericPassword");
+            Validation.getWordLanguage(language, "errCheckAlphanumericPassword");
             System.out.println();
-            validation.getWordLanguage(language, "enterPassword");
+            Validation.getWordLanguage(language, "enterPassword");
             return false;
         }
         return true;
@@ -72,8 +72,8 @@ public class LoginService {
 
     private boolean checkInputCaptcha(String captchaGenerated, Locale language) {
         System.out.println(captchaGenerated);
-        validation.getWordLanguage(language, "enterCaptcha");
-        String captchaInput = validation.checkInputString(language);
+        Validation.getWordLanguage(language, "enterCaptcha");
+        String captchaInput = Validation.checkInputString(language);
         for (int i = 0; i < captchaInput.length(); i++) {
             if (!captchaGenerated.contains(Character.toString(captchaInput.charAt(i)))) {
                 return false;
