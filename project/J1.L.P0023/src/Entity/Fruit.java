@@ -1,9 +1,5 @@
 package Entity;
 
-/**
- *
- * @author THAYCACAC
- */
 public class Fruit {
 
     private String fruitId;
@@ -44,15 +40,25 @@ public class Fruit {
     }
 
     public void setPrice(double price) {
+        // check if price is negative
+        if(price < 0) {
+            throw new IllegalArgumentException("Price of Fruit cannot be negative");
+        } else {
         this.price = price;
+        }
     }
 
     public int getQuantity() {
-        return quantity;
+            return quantity;
     }
 
     public void setQuantity(int quantity) {
-        this.quantity = quantity;
+        // check if quantity is negative
+        if(quantity < 0) {
+            throw new IllegalArgumentException("Quantity of Fruit cannot be negative");
+        } else {
+            this.quantity = quantity;
+        }
     }
 
     public String getOrigin() {
@@ -61,6 +67,18 @@ public class Fruit {
 
     public void setOrigin(String origin) {
         this.origin = origin;
+    }
+
+    public void updateQuantity(int amount) {
+        this.quantity += amount;
+    }
+
+    public boolean isAvailable() {
+        return quantity > 0;
+    }
+
+    public double calculateTotalPrice(int requestredQuantity) {
+        return price * requestredQuantity;
     }
 
 }
