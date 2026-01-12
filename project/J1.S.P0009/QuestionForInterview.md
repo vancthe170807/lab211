@@ -67,4 +67,5 @@ Thêm số thứ tự vào chuỗi Fibonacci được in ra.
         }
     }
     ```
-    Trong đoạn mã trên, tham số `index` được thêm vào hàm `fibonnaciHelper` để theo dõi số thứ tự của mỗi số Fibonacci. Mỗi lần in ra một số Fibonacci, ta cũng in kèm theo số thứ tự tương ứng. Khi gọi lại hàm đệ quy, ta tăng giá trị của `index` lên 1 để chuẩn bị cho lần in tiếp theo.
+
+Trong đoạn mã trên, tham số `index` được thêm vào hàm `fibonnaciHelper` để theo dõi số thứ tự của mỗi số Fibonacci. Mỗi lần in ra một số Fibonacci, ta cũng in kèm theo số thứ tự tương ứng. Khi gọi lại hàm đệ quy, ta tăng giá trị của `index` lên 1 để chuẩn bị cho lần in tiếp theo.
