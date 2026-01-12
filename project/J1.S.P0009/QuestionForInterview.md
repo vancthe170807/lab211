@@ -25,7 +25,9 @@ Quá trình đệ quy sẽ dừng lại khi tham số term nhỏ hơn 2 (tức l
     Quá trình này tiếp tục cho đến khi tất cả các số Fibonacci cần in ra đã được xử lý.
     
 6. Ưu điểm và nhược điểm của việc sử dụng đệ quy trong hàm này? 
+    
     Ưu điểm:
+    
     - Mã nguồn ngắn gọn và dễ hiểu: Việc sử dụng đệ quy giúp mã nguồn trở nên ngắn gọn và dễ đọc hơn so với việc sử dụng vòng lặp.
     - Tính trực quan: Đệ quy thể hiện rõ ràng ý tưởng về việc tính toán chuỗi Fibonacci, giúp người đọc dễ dàng nắm bắt logic của chương trình.
 
@@ -44,7 +46,7 @@ Quá trình đệ quy sẽ dừng lại khi tham số term nhỏ hơn 2 (tức l
     
 8. Chức năng phụ: 
 
-Thêm số thứ tự vào chuỗi Fibonacci được in ra.
+    Thêm số thứ tự vào chuỗi Fibonacci được in ra.
     Để thêm số thứ tự vào chuỗi Fibonacci được in ra, ta có thể bổ sung một tham số mới vào hàm fibonnaciHelper để theo dõi số thứ tự hiện tại.
     Dưới đây là cách thực hiện:
 
