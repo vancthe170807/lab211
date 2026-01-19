@@ -46,7 +46,7 @@ Quá trình đệ quy sẽ dừng lại khi tham số term nhỏ hơn 2 (tức l
     
 8. Chức năng phụ: 
 
-    Thêm số thứ tự vào chuỗi Fibonacci được in ra.
+    8.1. Thêm số thứ tự vào chuỗi Fibonacci được in ra.
     Để thêm số thứ tự vào chuỗi Fibonacci được in ra, ta có thể bổ sung một tham số mới vào hàm fibonnaciHelper để theo dõi số thứ tự hiện tại.
     Dưới đây là cách thực hiện:
 
@@ -70,4 +70,31 @@ Quá trình đệ quy sẽ dừng lại khi tham số term nhỏ hơn 2 (tức l
     }
     ```
 
-Trong đoạn mã trên, tham số `index` được thêm vào hàm `fibonnaciHelper` để theo dõi số thứ tự của mỗi số Fibonacci. Mỗi lần in ra một số Fibonacci, ta cũng in kèm theo số thứ tự tương ứng. Khi gọi lại hàm đệ quy, ta tăng giá trị của `index` lên 1 để chuẩn bị cho lần in tiếp theo.
+   Trong đoạn mã trên, tham số `index` được thêm vào hàm `fibonnaciHelper` để theo dõi số thứ tự của mỗi số Fibonacci. Mỗi lần in ra một số Fibonacci, ta cũng in kèm theo số thứ tự tương ứng. Khi gọi lại hàm đệ quy, ta tăng giá trị của `index` lên 1 để chuẩn bị cho lần in tiếp theo.
+
+   8.2. Fibonacci đảo
+
+   ```java
+    public class Main {
+
+    public static void fibonacciReverse(int term, int lower, int higher) {
+
+        // Khi term đạt giá trị này => DỪNG
+        if (term <= 0) {
+            return;
+        }
+
+        fibonacciHelper(term - 1, higher, higher + lower);
+
+        System.out.print(higher + ", ");
+    }
+
+    public static void main(String[] args) {
+        System.out.println("===== [LAB211] J1.S.P0009 - FIBONACCI =====");
+        System.out.println("The 45 sequence fibonacci: ");
+        fibonacciReverse(45, 1, 0);
+        System.out.println("\n===== END =====");
+    }
+}
+
+   ```
