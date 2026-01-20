@@ -77,24 +77,79 @@ Quá trình đệ quy sẽ dừng lại khi tham số term nhỏ hơn 2 (tức l
    ```java
     public class Main {
 
-    public static void fibonacciReverse(int term, int lower, int higher) {
-
-        // Khi term đạt giá trị này => DỪNG
-        if (term <= 0) {
-            return;
+        public static void fibonacciReverse(int term, int lower, int higher) {
+    
+            // Khi term đạt giá trị này => DỪNG
+            if (term <= 0) {
+                return;
+            }
+    
+            fibonacciHelper(term - 1, higher, higher + lower);
+    
+            System.out.print(higher + ", ");
         }
 
-        fibonacciHelper(term - 1, higher, higher + lower);
-
-        System.out.print(higher + ", ");
+        public static void main(String[] args) {
+            System.out.println("===== [LAB211] J1.S.P0009 - FIBONACCI =====");
+            System.out.println("The 45 sequence fibonacci: ");
+            fibonacciReverse(45, 1, 0);
+            System.out.println("\n===== END =====");
+        }
     }
-
-    public static void main(String[] args) {
-        System.out.println("===== [LAB211] J1.S.P0009 - FIBONACCI =====");
-        System.out.println("The 45 sequence fibonacci: ");
-        fibonacciReverse(45, 1, 0);
-        System.out.println("\n===== END =====");
-    }
-}
 
    ```
+8.3. Tìm số thuộc Fibonacci
+
+    ```java
+
+    import java.util.Scanner;
+    
+    public class Main {
+    
+        // Hàm 1: In dãy số (Code cũ của bạn đã sửa lại void)
+        public static void fibonacciHelper(int count, int lower, int higher) {
+            if (count <= 0) return;
+            System.out.print(higher + ", ");
+            fibonacciHelper(count - 1, higher, higher + lower);
+        }
+    
+        // Hàm 2: Kiểm tra số thuộc dãy (Logic MỚI)
+        // target: số người dùng muốn kiểm tra
+        public static boolean checkFibonacci(int target, int lower, int higher) {
+            // Trường hợp 1: Tìm thấy!
+            if (higher == target) {
+                return true;
+            }
+    
+            // Trường hợp 2: Số hiện tại đã lớn hơn số cần tìm -> Không bao giờ tìm thấy nữa
+            // Ví dụ: target = 4. Dãy chạy: 0, 1, 1, 2, 3, 5... (5 > 4 nên dừng luôn)
+            if (higher > target) {
+                return false;
+            }
+    
+            // Trường hợp 3: Số hiện tại vẫn nhỏ hơn target -> Gọi đệ quy để kiểm tra số kế tiếp
+            return checkFibonacci(target, higher, higher + lower);
+        }
+    
+        public static void main(String[] args) {
+            // --- Phần 1: In dãy cũ ---
+            System.out.println("The 10 sequence fibonacci: ");
+            fibonacciHelper(10, 1, 0);
+            System.out.println("\n--------------------------");
+    
+            System.out.print("Input an integer number for check: ");
+    
+            // --- Phần 2: Kiểm tra số thuộc dãy ---
+            int numberToCheck = new Scanner(System.in).nextInt(); // Thử thay số này bằng 5 hoặc 8 để test
+    
+            // Gọi hàm kiểm tra bắt đầu từ số đầu tiên của dãy (lower=1, higher=0)
+            boolean isFibo = checkFibonacci(numberToCheck, 1, 0);
+    
+            if (isFibo) {
+                System.out.println(numberToCheck + " is a member of Fibonacci Number.");
+            } else {
+                System.out.println(numberToCheck + " isn't a member of Fibonacci Number.");
+            }
+        }
+    }
+    ```
