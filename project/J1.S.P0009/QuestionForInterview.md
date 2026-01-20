@@ -98,7 +98,7 @@ Quá trình đệ quy sẽ dừng lại khi tham số term nhỏ hơn 2 (tức l
     }
 
    ```
-8.3. Tìm số thuộc Fibonacci
+    8.3. Tìm số thuộc Fibonacci
 
     ```java
 
