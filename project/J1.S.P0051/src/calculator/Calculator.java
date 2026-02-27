@@ -17,10 +17,11 @@ public class Calculator {
                     || result.equalsIgnoreCase("*")
                     || result.equalsIgnoreCase("/")
                     || result.equalsIgnoreCase("^")
+                    || result.equalsIgnoreCase("r") // CODE Thêm
                     || result.equalsIgnoreCase("=")) {
                 return result;
             } else {
-                System.err.println("Please input (+, -, *, /, ^)");
+                System.err.println("Please input (+, -, *, /, ^, r, =)");
             }
             System.out.print("Enter again: ");
         }
@@ -78,6 +79,20 @@ public class Calculator {
             }
             if (operator.equalsIgnoreCase("^")) {
                 memory = Math.pow(memory, inputNumber());
+                System.out.println("Memory: " + memory);
+            }
+            // Tính căn bậc n
+            if(operator.equalsIgnoreCase("r")) {
+                int r = (int) inputNumber();
+                if(memory < 0) {
+                    if(r % 2 == 0) {
+                        System.out.println("Can't Calculator");
+                    } else {
+                        memory = -Math.pow(Math.abs(memory), 1.0/r);
+                    }
+                } else {
+                    memory = Math.pow(Math.abs(memory), 1.0/r);
+                }
                 System.out.println("Memory: " + memory);
             }
             if (operator.equalsIgnoreCase("=")) {
