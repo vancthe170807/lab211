@@ -22,8 +22,13 @@ public class Menu {
 
         int choice = validation.checkInputIntLimit(1, 3, english);
         switch (choice) {
-            case 1 -> loginService.login(vietnamese);
-            case 2 -> loginService.login(english);
-            case 3 -> System.out.println("Goodbye!");
+            case 1: {
+                loginService.login(vietnamese);
+            }
+            case 2: {
+                loginService.login(english);}
+            case 3: {
+                System.out.println("Goodbye!");
+            }
         }
     }}

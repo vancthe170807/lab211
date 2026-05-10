@@ -35,6 +35,10 @@ public class Validation {
         }
     }
 
+    public static String readRawInput() {
+        return in.nextLine();
+    }
+
     public static int checkInputAccount(Locale language) {
         while (true) {
             String result = in.nextLine();

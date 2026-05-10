@@ -73,13 +73,8 @@ public class LoginService {
     private boolean checkInputCaptcha(String captchaGenerated, Locale language) {
         System.out.println(captchaGenerated);
         Validation.getWordLanguage(language, "enterCaptcha");
-        String captchaInput = Validation.checkInputString(language);
-        for (int i = 0; i < captchaInput.length(); i++) {
-            if (!captchaGenerated.contains(Character.toString(captchaInput.charAt(i)))) {
-                return false;
-            }
-        }
-        return true;
+        String captchaInput = Validation.readRawInput();
+        return captchaGenerated.equals(captchaInput);
     }
 
     private String generateCaptchaText() {
