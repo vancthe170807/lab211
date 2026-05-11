@@ -10,9 +10,10 @@ public class Order {
 
     /**
      * Khởi tạo một đối tượng Order mới.
+     *
      * @param fruitName Tên trái cây
-     * @param quantity Số lượng mua
-     * @param price Giá tại thời điểm mua
+     * @param quantity  Số lượng mua
+     * @param price     Giá tại thời điểm mua
      */
     public Order(String fruitName, int quantity, double price) {
         this.fruitName = fruitName;
@@ -20,17 +21,33 @@ public class Order {
         this.price = price;
     }
 
-    public String getFruitName() { return fruitName; }
-    public void setFruitName(String fruitName) { this.fruitName = fruitName; }
+    public String getFruitName() {
+        return fruitName;
+    }
 
-    public int getQuantity() { return quantity; }
-    public void setQuantity(int quantity) { this.quantity = quantity; }
+    public void setFruitName(String fruitName) {
+        this.fruitName = fruitName;
+    }
 
-    public double getPrice() { return price; }
-    public void setPrice(double price) { this.price = price; }
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
 
     /**
      * Tính tổng tiền cho mục hàng này.
+     *
      * @return Thành tiền
      */
     public double getAmount() {

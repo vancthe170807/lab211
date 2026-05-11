@@ -12,11 +12,12 @@ public class Fruit {
 
     /**
      * Khởi tạo một đối tượng Fruit mới.
-     * @param fruitId Mã trái cây
+     *
+     * @param fruitId   Mã trái cây
      * @param fruitName Tên trái cây
-     * @param price Giá
-     * @param quantity Số lượng
-     * @param origin Xuất xứ
+     * @param price     Giá
+     * @param quantity  Số lượng
+     * @param origin    Xuất xứ
      */
     public Fruit(String fruitId, String fruitName, double price, int quantity, String origin) {
         this.fruitId = fruitId;
@@ -26,23 +27,49 @@ public class Fruit {
         this.origin = origin;
     }
 
-    public String getFruitId() { return fruitId; }
-    public void setFruitId(String fruitId) { this.fruitId = fruitId; }
+    public String getFruitId() {
+        return fruitId;
+    }
 
-    public String getFruitName() { return fruitName; }
-    public void setFruitName(String fruitName) { this.fruitName = fruitName; }
+    public void setFruitId(String fruitId) {
+        this.fruitId = fruitId;
+    }
 
-    public double getPrice() { return price; }
-    public void setPrice(double price) { this.price = price; }
+    public String getFruitName() {
+        return fruitName;
+    }
 
-    public int getQuantity() { return quantity; }
-    public void setQuantity(int quantity) { this.quantity = quantity; }
+    public void setFruitName(String fruitName) {
+        this.fruitName = fruitName;
+    }
 
-    public String getOrigin() { return origin; }
-    public void setOrigin(String origin) { this.origin = origin; }
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(String origin) {
+        this.origin = origin;
+    }
 
     /**
      * Trình bày thông tin trái cây dưới dạng chuỗi định dạng.
+     *
      * @return Chuỗi thông tin trái cây
      */
     @Override
