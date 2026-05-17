@@ -1,22 +1,31 @@
 package controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import model.Constants;
 import model.Fruit;
 import model.Order;
 import view.FruitView;
 import view.Validation;
-import java.util.*;
 
 /**
- * Lớp FruitController điều khiển luồng hoạt động giữa Model và View.
+ * The FruitController class manages the application flow by delegating tasks to
+ * the Model and View layers.
  */
 public class FruitController {
+
     private final List<Fruit> fruitList;
+
     private final Map<String, List<Order>> ordersMap;
+
     private final FruitView view;
+
     private final Validation validation;
 
     /**
-     * Khởi tạo Controller với các thành phần cần thiết.
+     * Initializes the FruitController with its dependencies.
      */
     public FruitController() {
         this.fruitList = new ArrayList<>();
@@ -26,12 +35,18 @@ public class FruitController {
     }
 
     /**
-     * Bắt đầu chương trình và hiển thị menu chính.
+     * Starts the program and handles the main menu loop.
      */
     public void start() {
+        // Main program loop
         while (true) {
+            int choice;
+
             view.displayMenu();
-            int choice = validation.checkInputIntLimit(1, 4);
+
+            choice = validation.checkInputIntLimit(1, 4);
+
+            // Menu selection handling
             switch (choice) {
                 case 1:
                     createFruit();
@@ -43,123 +58,168 @@ public class FruitController {
                     shopping();
                     break;
                 case 4:
-                    System.out.println("Thanks for using the system. Goodbye!");
+                    System.out.println(Constants.MESSAGE_THANKS);
                     return;
+                default:
+                    break;
             }
         }
     }
 
     /**
-     * Xử lý logic tạo mới trái cây.
+     * Handles the logic for creating a new fruit.
      */
     private void createFruit() {
+        // Loop for multiple fruit creation
         do {
+            String id;
+            String name;
+            String origin;
+            double price;
+            int quantity;
+
             System.out.print("Enter fruit id: ");
-            String id = validation.checkInputString();
+            id = validation.checkInputString();
+
+            // Check for duplicate ID
             if (findFruitById(id) != null) {
-                System.err.println("ID already exists!");
+                System.err.println(Constants.ERROR_ID_EXISTS);
+
                 continue;
             }
+
             System.out.print("Enter fruit name: ");
-            String name = validation.checkInputString();
+            name = validation.checkInputString();
+
             System.out.print("Enter price: ");
-            double price = validation.checkInputDouble();
+            price = validation.checkInputDouble();
+
             System.out.print("Enter quantity: ");
-            int quantity = (int) validation.checkInputDouble();
+            quantity = validation.checkInputInt();
+
             System.out.print("Enter origin: ");
-            String origin = validation.checkInputString();
+            origin = validation.checkInputString();
 
             fruitList.add(new Fruit(id, name, price, quantity, origin));
-            System.out.println("Fruit added successfully.");
-            
-            System.out.print("Do you want to continue (Y/N)? ");
+
+            System.out.println(Constants.MESSAGE_FRUIT_ADDED);
+            System.out.print(Constants.PROMPT_CONTINUE);
+
         } while (validation.checkInputYN());
     }
 
     /**
-     * Xử lý logic mua hàng dành cho khách hàng.
+     * Handles the shopping logic for customers.
      */
     private void shopping() {
+        List<Order> currentOrderList;
+
+        // Check if there are any fruits available
         if (fruitList.stream().noneMatch(f -> f.getQuantity() > 0)) {
-            System.err.println("The shop is out of stock or has no products!");
+            System.err.println(Constants.MESSAGE_OUT_OF_STOCK);
+
             return;
         }
 
-        List<Order> currentOrderList = new ArrayList<>();
+        currentOrderList = new ArrayList<>();
+
+        // Loop for selecting multiple items
         while (true) {
-            // Lọc danh sách trái cây còn hàng
-            List<Fruit> availableFruits = new ArrayList<>();
-            for (Fruit f : fruitList) {
-                if (f.getQuantity() > 0) {
-                    availableFruits.add(f);
+            List<Fruit> availableFruitList;
+            Fruit selectedFruit;
+            int itemIdx;
+            int quantity;
+
+            availableFruitList = new ArrayList<>();
+
+            // Filter available fruits
+            for (Fruit fruit : fruitList) {
+                if (fruit.getQuantity() > 0) {
+                    availableFruitList.add(fruit);
                 }
             }
 
-            if (availableFruits.isEmpty()) {
-                System.out.println("All items are sold out!");
+            // Check if items are sold out during session
+            if (availableFruitList.isEmpty()) {
+                System.out.println(Constants.MESSAGE_ALL_SOLD_OUT);
+
                 break;
             }
 
-            // Hiển thị và chọn mặt hàng
-            view.displayFruitList(availableFruits);
+            view.displayFruitList(availableFruitList);
+
             System.out.print("Select item: ");
-            int itemIdx = validation.checkInputIntLimit(1, availableFruits.size());
-            Fruit selectedFruit = availableFruits.get(itemIdx - 1);
+            itemIdx = validation.checkInputIntLimit(1, availableFruitList.size());
+            selectedFruit = availableFruitList.get(itemIdx - 1);
 
             System.out.println("You selected: " + selectedFruit.getFruitName());
             System.out.print("Please input quantity: ");
-            int quantity = validation.checkInputIntLimit(1, selectedFruit.getQuantity());
+            quantity = validation.checkInputIntLimit(1, selectedFruit.getQuantity());
 
-            // Cập nhật số lượng trong kho và giỏ hàng
             selectedFruit.setQuantity(selectedFruit.getQuantity() - quantity);
             updateOrderList(currentOrderList, selectedFruit, quantity);
 
             System.out.print("Do you want to continue shopping (Y/N)? ");
-            if (!validation.checkInputYN()) break;
+
+            if (!validation.checkInputYN()) {
+                break;
+            }
         }
 
+        // Finalize order if list is not empty
         if (!currentOrderList.isEmpty()) {
+            String customerName;
+
             view.displayInvoice(currentOrderList);
+
             System.out.print("Enter customer name: ");
-            String customer = validation.checkInputString();
-            
-            // Fix: Tránh ghi đè nếu khách hàng đã tồn tại trong hệ thống
-            if (ordersMap.containsKey(customer)) {
-                ordersMap.get(customer).addAll(currentOrderList);
+            customerName = validation.checkInputString();
+
+            // Merge orders if customer exists
+            if (ordersMap.containsKey(customerName)) {
+                ordersMap.get(customerName).addAll(currentOrderList);
             } else {
-                ordersMap.put(customer, currentOrderList);
+                ordersMap.put(customerName, currentOrderList);
             }
-            System.out.println("Order saved successfully.");
+
+            System.out.println(Constants.MESSAGE_ORDER_SAVED);
         }
     }
 
     /**
-     * Cập nhật danh sách đơn hàng hiện tại.
-     * @param list Danh sách đơn hàng hiện tại
-     * @param fruit Trái cây được chọn
-     * @param qty Số lượng mua
+     * Updates the current order list with selected fruit and quantity.
+     *
+     * @param orderList The current list of orders
+     * @param fruit     The selected fruit
+     * @param quantity  The quantity purchased
      */
-    private void updateOrderList(List<Order> list, Fruit fruit, int qty) {
-        for (Order o : list) {
-            if (o.getFruitName().equals(fruit.getFruitName())) {
-                o.setQuantity(o.getQuantity() + qty);
+    private void updateOrderList(List<Order> orderList, Fruit fruit, int quantity) {
+        // Search for existing item in order list
+        for (Order order : orderList) {
+            if (order.getFruitName().equals(fruit.getFruitName())) {
+                order.setQuantity(order.getQuantity() + quantity);
+
                 return;
             }
         }
-        list.add(new Order(fruit.getFruitName(), qty, fruit.getPrice()));
+
+        orderList.add(new Order(fruit.getFruitName(), quantity, fruit.getPrice()));
     }
 
     /**
-     * Tìm kiếm trái cây theo mã ID.
-     * @param id Mã ID cần tìm
-     * @return Đối tượng Fruit hoặc null nếu không thấy
+     * Finds a fruit from the fruit list by its ID.
+     *
+     * @param id The ID to search for
+     * @return The Fruit object if found, otherwise null
      */
     private Fruit findFruitById(String id) {
-        for (Fruit f : fruitList) {
-            if (f.getFruitId().equalsIgnoreCase(id)) {
-                return f;
+        // Search by ID (case insensitive)
+        for (Fruit fruit : fruitList) {
+            if (fruit.getFruitId().equalsIgnoreCase(id)) {
+                return fruit;
             }
         }
+
         return null;
     }
 }

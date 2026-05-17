@@ -3,15 +3,20 @@ package Manager;
 import controller.FruitController;
 
 /**
- * Lớp Main là điểm khởi đầu của ứng dụng.
+ * The Main class serves as the entry point for the Fruit Shop application.
  */
 public class Main {
+
     /**
-     * Phương thức main để khởi chạy chương trình.
-     * @param args Tham số dòng lệnh
+     * The main entry method that initializes and starts the application controller.
+     *
+     * @param args Command line arguments (not used)
      */
     public static void main(String[] args) {
-        FruitController controller = new FruitController();
-        controller.start();
+        FruitController fruitController;
+
+        fruitController = new FruitController();
+
+        fruitController.start();
     }
 }

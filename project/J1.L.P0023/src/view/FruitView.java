@@ -1,78 +1,111 @@
 package view;
 
-import model.Fruit;
-import model.Order;
 import java.util.List;
 import java.util.Map;
+import model.Constants;
+import model.Fruit;
+import model.Order;
 
 /**
- * Lớp FruitView xử lý việc hiển thị thông tin ra màn hình console.
+ * The FruitView class handles displaying information to the console.
  */
 public class FruitView {
-    
+
     /**
-     * Hiển thị menu chính của chương trình.
+     * Displays the main menu of the program.
      */
     public void displayMenu() {
-        System.out.println("\n================ FRUIT SHOP SYSTEM ================");
-        System.out.println("1. Create Fruit");
-        System.out.println("2. View orders");
-        System.out.println("3. Shopping (for buyer)");
-        System.out.println("4. Exit");
-        System.out.print("Enter your choice: ");
+        System.out.println(Constants.MENU_TITLE);
+        System.out.println(Constants.MENU_OPTION_1);
+        System.out.println(Constants.MENU_OPTION_2);
+        System.out.println(Constants.MENU_OPTION_3);
+        System.out.println(Constants.MENU_OPTION_4);
+        System.out.print(Constants.MENU_PROMPT);
     }
 
     /**
-     * Hiển thị danh sách trái cây có sẵn để mua.
-     * @param fruits Danh sách trái cây
+     * Displays the list of available fruits for purchase.
+     *
+     * @param fruitList The list of fruits to display
      */
-    public void displayFruitList(List<Fruit> fruits) {
-        if (fruits.isEmpty()) {
-            System.out.println("The shop is currently empty.");
+    public void displayFruitList(List<Fruit> fruitList) {
+        int index;
+
+        // Check if list is empty
+        if (fruitList.isEmpty()) {
+            System.out.println(Constants.MESSAGE_SHOP_EMPTY);
+
             return;
         }
-        System.out.println("+------+-----------------+------------+------------+");
-        System.out.printf("| %-4s | %-15s | %-10s | %-10s |\n", "Item", "Fruit Name", "Origin", "Price");
-        System.out.println("+------+-----------------+------------+------------+");
-        int i = 1;
-        for (Fruit f : fruits) {
-            if (f.getQuantity() > 0) {
-                System.out.printf("| %-4d | %-15s | %-10s | %-9.1f$ |\n", 
-                        i++, f.getFruitName(), f.getOrigin(), f.getPrice());
+
+        System.out.println(Constants.FRUIT_TABLE_SEP);
+        System.out.printf(Constants.FRUIT_TABLE_HEADER, "Item", "Fruit Name", "Origin", "Price");
+        System.out.println(Constants.FRUIT_TABLE_SEP);
+
+        index = 1;
+
+        // Iterate through fruit list
+        for (Fruit fruit : fruitList) {
+            // Display only available fruits
+            if (fruit.getQuantity() > 0) {
+                System.out.printf(Constants.FRUIT_TABLE_ROW,
+                        index, fruit.getFruitName(), fruit.getOrigin(), fruit.getPrice());
+
+                index = index + 1;
             }
         }
-        System.out.println("+------+-----------------+------------+------------+");
+
+        System.out.println(Constants.FRUIT_TABLE_SEP);
     }
 
     /**
-     * Hiển thị hóa đơn của đơn hàng hiện tại.
-     * @param orders Danh sách các mục hàng
+     * Displays the invoice of the current order.
+     *
+     * @param orderList The list of items in the order
      */
-    public void displayInvoice(List<Order> orders) {
-        double total = 0;
-        System.out.println("+-----------------+----------+--------+----------+");
-        System.out.printf("| %-15s | %-8s | %-6s | %-8s |\n", "Product", "Quantity", "Price", "Amount");
-        System.out.println("+-----------------+----------+--------+----------+");
-        for (Order o : orders) {
-            System.out.printf("| %-15s | %-8d | %-5.1f$ | %-7.1f$ |\n",
-                    o.getFruitName(), o.getQuantity(), o.getPrice(), o.getAmount());
-            total += o.getAmount();
+    public void displayInvoice(List<Order> orderList) {
+        double totalAmount;
+
+        totalAmount = 0;
+
+        System.out.println(Constants.INVOICE_TABLE_SEP);
+        System.out.printf(Constants.INVOICE_TABLE_HEADER, "Product", "Quantity", "Price", "Amount");
+        System.out.println(Constants.INVOICE_TABLE_SEP);
+
+        // Iterate through order list
+        for (Order order : orderList) {
+            System.out.printf(Constants.INVOICE_TABLE_ROW,
+                    order.getFruitName(), order.getQuantity(), order.getPrice(), order.getAmount());
+
+            totalAmount = totalAmount + order.getAmount();
         }
-        System.out.println("+-----------------+----------+--------+----------+");
-        System.out.printf("Total: %.1f$\n", total);
+
+        System.out.println(Constants.INVOICE_TABLE_SEP);
+        System.out.printf(Constants.TOTAL_AMOUNT_FORMAT, totalAmount);
     }
 
     /**
-     * Hiển thị tất cả các đơn hàng đã lưu trong hệ thống.
-     * @param ordersMap Bản đồ chứa tên khách hàng và danh sách đơn hàng của họ
+     * Displays all orders saved in the system.
+     *
+     * @param ordersMap A map containing customer names and their order lists
      */
     public void displayAllOrders(Map<String, List<Order>> ordersMap) {
+        // Check if map is empty
         if (ordersMap.isEmpty()) {
-            System.err.println("No orders found.");
+            System.err.println(Constants.MESSAGE_NO_ORDERS);
+
             return;
         }
+
+        // Iterate through all orders
         for (Map.Entry<String, List<Order>> entry : ordersMap.entrySet()) {
-            System.out.println("\nCustomer: " + entry.getKey());
+            StringBuilder customerLabel;
+
+            customerLabel = new StringBuilder();
+            customerLabel.append(Constants.MESSAGE_CUSTOMER_LABEL);
+            customerLabel.append(entry.getKey());
+
+            System.out.println(customerLabel.toString());
             displayInvoice(entry.getValue());
         }
     }
