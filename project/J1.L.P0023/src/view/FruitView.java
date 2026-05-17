@@ -12,6 +12,24 @@ import model.Order;
 public class FruitView {
 
     /**
+     * Displays a normal message.
+     *
+     * @param message The message to display
+     */
+    public void displayMessage(String message) {
+        System.out.println(message);
+    }
+
+    /**
+     * Displays an error message.
+     *
+     * @param message The error message to display
+     */
+    public void displayError(String message) {
+        System.err.println(message);
+    }
+
+    /**
      * Displays the main menu of the program.
      */
     public void displayMenu() {
@@ -108,5 +126,87 @@ public class FruitView {
             System.out.println(customerLabel.toString());
             displayInvoice(entry.getValue());
         }
+    }
+
+    /**
+     * Displays the selected fruit name.
+     *
+     * @param fruitName The selected fruit name
+     */
+    public void displaySelectedFruit(String fruitName) {
+        StringBuilder selectedFruitMessage;
+
+        selectedFruitMessage = new StringBuilder();
+        selectedFruitMessage.append(Constants.MESSAGE_SELECTED_FRUIT);
+        selectedFruitMessage.append(fruitName);
+
+        System.out.println(selectedFruitMessage.toString());
+    }
+
+    /**
+     * Gets a validated string input from the user.
+     *
+     * @param prompt     The input prompt
+     * @param validation The validation helper
+     * @return A valid string
+     */
+    public String inputString(String prompt, Validation validation) {
+        System.out.print(prompt);
+
+        return validation.checkInputString();
+    }
+
+    /**
+     * Gets a validated double input from the user.
+     *
+     * @param prompt     The input prompt
+     * @param validation The validation helper
+     * @return A valid double
+     */
+    public double inputDouble(String prompt, Validation validation) {
+        System.out.print(prompt);
+
+        return validation.checkInputDouble();
+    }
+
+    /**
+     * Gets a validated integer input from the user.
+     *
+     * @param prompt     The input prompt
+     * @param validation The validation helper
+     * @return A valid integer
+     */
+    public int inputInteger(String prompt, Validation validation) {
+        System.out.print(prompt);
+
+        return validation.checkInputInt();
+    }
+
+    /**
+     * Gets a validated integer input within a range from the user.
+     *
+     * @param prompt     The input prompt
+     * @param validation The validation helper
+     * @param min        The minimum allowed value
+     * @param max        The maximum allowed value
+     * @return A valid integer in range
+     */
+    public int inputIntegerLimit(String prompt, Validation validation, int min, int max) {
+        System.out.print(prompt);
+
+        return validation.checkInputIntLimit(min, max);
+    }
+
+    /**
+     * Gets a validated yes or no input from the user.
+     *
+     * @param prompt     The input prompt
+     * @param validation The validation helper
+     * @return True for yes, otherwise false
+     */
+    public boolean inputYesNo(String prompt, Validation validation) {
+        System.out.print(prompt);
+
+        return validation.checkInputYN();
     }
 }

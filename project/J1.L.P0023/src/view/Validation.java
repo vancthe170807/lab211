@@ -110,7 +110,7 @@ public class Validation {
 
                 return result;
             } catch (NumberFormatException e) {
-                System.err.print("Must be a positive integer. Enter again: ");
+                System.err.print(Constants.ERROR_POSITIVE_INTEGER);
             }
         }
     }

@@ -78,7 +78,8 @@ public class Constants {
     /**
      * Fruit table separator.
      */
-    public static final String FRUIT_TABLE_SEP = "+------+-----------------+------------+------------+";
+    public static final String FRUIT_TABLE_SEP =
+            "+------+-----------------+------------+------------+";
 
     /**
      * Fruit table header format.
@@ -93,7 +94,8 @@ public class Constants {
     /**
      * Invoice table separator.
      */
-    public static final String INVOICE_TABLE_SEP = "+-----------------+----------+--------+----------+";
+    public static final String INVOICE_TABLE_SEP =
+            "+-----------------+----------+--------+----------+";
 
     /**
      * Invoice table header format.
@@ -143,7 +145,65 @@ public class Constants {
     /**
      * Out of stock message.
      */
-    public static final String MESSAGE_OUT_OF_STOCK = "The shop is out of stock or has no products!";
+    public static final String MESSAGE_OUT_OF_STOCK =
+            "The shop is out of stock or has no products!";
+
+    /**
+     * Prompt for fruit ID input.
+     */
+    public static final String PROMPT_FRUIT_ID = "Enter fruit id: ";
+
+    /**
+     * Prompt for fruit name input.
+     */
+    public static final String PROMPT_FRUIT_NAME = "Enter fruit name: ";
+
+    /**
+     * Prompt for price input.
+     */
+    public static final String PROMPT_PRICE = "Enter price: ";
+
+    /**
+     * Prompt for quantity input.
+     */
+    public static final String PROMPT_QUANTITY = "Enter quantity: ";
+
+    /**
+     * Prompt for origin input.
+     */
+    public static final String PROMPT_ORIGIN = "Enter origin: ";
+
+    /**
+     * Prompt for selected item input.
+     */
+    public static final String PROMPT_SELECT_ITEM = "Select item: ";
+
+    /**
+     * Prompt for shopping quantity input.
+     */
+    public static final String PROMPT_INPUT_QUANTITY = "Please input quantity: ";
+
+    /**
+     * Prompt for continuing shopping.
+     */
+    public static final String PROMPT_CONTINUE_SHOPPING =
+            "Do you want to continue shopping (Y/N)? ";
+
+    /**
+     * Prompt for customer name input.
+     */
+    public static final String PROMPT_CUSTOMER_NAME = "Enter customer name: ";
+
+    /**
+     * Message prefix for selected fruit.
+     */
+    public static final String MESSAGE_SELECTED_FRUIT = "You selected: ";
+
+    /**
+     * Error message for invalid positive integer.
+     */
+    public static final String ERROR_POSITIVE_INTEGER =
+            "Must be a positive integer. Enter again: ";
 
     /**
      * All items sold out message.

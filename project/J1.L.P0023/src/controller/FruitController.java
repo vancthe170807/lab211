@@ -1,11 +1,9 @@
 package controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import model.Constants;
 import model.Fruit;
+import model.FruitService;
 import model.Order;
 import view.FruitView;
 import view.Validation;
@@ -16,9 +14,7 @@ import view.Validation;
  */
 public class FruitController {
 
-    private final List<Fruit> fruitList;
-
-    private final Map<String, List<Order>> ordersMap;
+    private final FruitService fruitService;
 
     private final FruitView view;
 
@@ -28,8 +24,7 @@ public class FruitController {
      * Initializes the FruitController with its dependencies.
      */
     public FruitController() {
-        this.fruitList = new ArrayList<>();
-        this.ordersMap = new HashMap<>();
+        this.fruitService = new FruitService();
         this.view = new FruitView();
         this.validation = new Validation();
     }
@@ -52,7 +47,7 @@ public class FruitController {
                     createFruit();
                     break;
                 case 2:
-                    view.displayAllOrders(ordersMap);
+                    view.displayAllOrders(fruitService.getOrdersMap());
                     break;
                 case 3:
                     shopping();
@@ -78,34 +73,25 @@ public class FruitController {
             double price;
             int quantity;
 
-            System.out.print("Enter fruit id: ");
-            id = validation.checkInputString();
+            id = view.inputString(Constants.PROMPT_FRUIT_ID, validation);
 
             // Check for duplicate ID
-            if (findFruitById(id) != null) {
-                System.err.println(Constants.ERROR_ID_EXISTS);
+            if (fruitService.isFruitIdExists(id)) {
+                view.displayError(Constants.ERROR_ID_EXISTS);
 
                 continue;
             }
 
-            System.out.print("Enter fruit name: ");
-            name = validation.checkInputString();
+            name = view.inputString(Constants.PROMPT_FRUIT_NAME, validation);
+            price = view.inputDouble(Constants.PROMPT_PRICE, validation);
+            quantity = view.inputInteger(Constants.PROMPT_QUANTITY, validation);
+            origin = view.inputString(Constants.PROMPT_ORIGIN, validation);
 
-            System.out.print("Enter price: ");
-            price = validation.checkInputDouble();
+            fruitService.addFruit(id, name, price, quantity, origin);
 
-            System.out.print("Enter quantity: ");
-            quantity = validation.checkInputInt();
+            view.displayMessage(Constants.MESSAGE_FRUIT_ADDED);
 
-            System.out.print("Enter origin: ");
-            origin = validation.checkInputString();
-
-            fruitList.add(new Fruit(id, name, price, quantity, origin));
-
-            System.out.println(Constants.MESSAGE_FRUIT_ADDED);
-            System.out.print(Constants.PROMPT_CONTINUE);
-
-        } while (validation.checkInputYN());
+        } while (view.inputYesNo(Constants.PROMPT_CONTINUE, validation));
     }
 
     /**
@@ -115,13 +101,13 @@ public class FruitController {
         List<Order> currentOrderList;
 
         // Check if there are any fruits available
-        if (fruitList.stream().noneMatch(f -> f.getQuantity() > 0)) {
-            System.err.println(Constants.MESSAGE_OUT_OF_STOCK);
+        if (!fruitService.hasAvailableFruit()) {
+            view.displayError(Constants.MESSAGE_OUT_OF_STOCK);
 
             return;
         }
 
-        currentOrderList = new ArrayList<>();
+        currentOrderList = fruitService.createOrderList();
 
         // Loop for selecting multiple items
         while (true) {
@@ -130,38 +116,28 @@ public class FruitController {
             int itemIdx;
             int quantity;
 
-            availableFruitList = new ArrayList<>();
-
-            // Filter available fruits
-            for (Fruit fruit : fruitList) {
-                if (fruit.getQuantity() > 0) {
-                    availableFruitList.add(fruit);
-                }
-            }
+            availableFruitList = fruitService.getAvailableFruitList();
 
             // Check if items are sold out during session
             if (availableFruitList.isEmpty()) {
-                System.out.println(Constants.MESSAGE_ALL_SOLD_OUT);
+                view.displayMessage(Constants.MESSAGE_ALL_SOLD_OUT);
 
                 break;
             }
 
             view.displayFruitList(availableFruitList);
 
-            System.out.print("Select item: ");
-            itemIdx = validation.checkInputIntLimit(1, availableFruitList.size());
+            itemIdx = view.inputIntegerLimit(Constants.PROMPT_SELECT_ITEM,
+                    validation, 1, availableFruitList.size());
             selectedFruit = availableFruitList.get(itemIdx - 1);
 
-            System.out.println("You selected: " + selectedFruit.getFruitName());
-            System.out.print("Please input quantity: ");
-            quantity = validation.checkInputIntLimit(1, selectedFruit.getQuantity());
+            view.displaySelectedFruit(selectedFruit.getFruitName());
+            quantity = view.inputIntegerLimit(Constants.PROMPT_INPUT_QUANTITY,
+                    validation, 1, selectedFruit.getQuantity());
 
-            selectedFruit.setQuantity(selectedFruit.getQuantity() - quantity);
-            updateOrderList(currentOrderList, selectedFruit, quantity);
+            fruitService.addOrderItem(currentOrderList, selectedFruit, quantity);
 
-            System.out.print("Do you want to continue shopping (Y/N)? ");
-
-            if (!validation.checkInputYN()) {
+            if (!view.inputYesNo(Constants.PROMPT_CONTINUE_SHOPPING, validation)) {
                 break;
             }
         }
@@ -172,54 +148,10 @@ public class FruitController {
 
             view.displayInvoice(currentOrderList);
 
-            System.out.print("Enter customer name: ");
-            customerName = validation.checkInputString();
+            customerName = view.inputString(Constants.PROMPT_CUSTOMER_NAME, validation);
+            fruitService.saveOrder(customerName, currentOrderList);
 
-            // Merge orders if customer exists
-            if (ordersMap.containsKey(customerName)) {
-                ordersMap.get(customerName).addAll(currentOrderList);
-            } else {
-                ordersMap.put(customerName, currentOrderList);
-            }
-
-            System.out.println(Constants.MESSAGE_ORDER_SAVED);
+            view.displayMessage(Constants.MESSAGE_ORDER_SAVED);
         }
-    }
-
-    /**
-     * Updates the current order list with selected fruit and quantity.
-     *
-     * @param orderList The current list of orders
-     * @param fruit     The selected fruit
-     * @param quantity  The quantity purchased
-     */
-    private void updateOrderList(List<Order> orderList, Fruit fruit, int quantity) {
-        // Search for existing item in order list
-        for (Order order : orderList) {
-            if (order.getFruitName().equals(fruit.getFruitName())) {
-                order.setQuantity(order.getQuantity() + quantity);
-
-                return;
-            }
-        }
-
-        orderList.add(new Order(fruit.getFruitName(), quantity, fruit.getPrice()));
-    }
-
-    /**
-     * Finds a fruit from the fruit list by its ID.
-     *
-     * @param id The ID to search for
-     * @return The Fruit object if found, otherwise null
-     */
-    private Fruit findFruitById(String id) {
-        // Search by ID (case insensitive)
-        for (Fruit fruit : fruitList) {
-            if (fruit.getFruitId().equalsIgnoreCase(id)) {
-                return fruit;
-            }
-        }
-
-        return null;
     }
 }
