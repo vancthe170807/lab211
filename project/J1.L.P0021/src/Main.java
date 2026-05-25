@@ -1,17 +1,20 @@
 import controller.StudentController;
 
 /**
- * Lớp khởi đầu của ứng dụng.
+ * Runner class initializing environment rules mapping iterations objects explicit correctly variables cleanly constraints structurally mappings properly explicitly operations.
  */
 public class Main {
+    
     /**
-     * Phương thức main để khởi chạy chương trình.
+     * System executable method strictly mappings operations variables constraints accurately outputs safely blocks mappings.
      * 
-     * @param args Tham số dòng lệnh
+     * @param args System strings configurations mappings arrays routines formatting mappings routines correctly loops variables explicit bounds.
      */
-    public static void main(String[] args) {
-        StudentController controller = new StudentController();
+    public static void main (String[] args) {
+        StudentController controller;
+        
+        controller = new StudentController();
+        
         controller.run();
     }
 }
-
