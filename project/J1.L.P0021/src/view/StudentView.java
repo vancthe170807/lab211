@@ -56,6 +56,7 @@ public class StudentView {
         String id;
         
         id = validation.getString("Enter student's id: ", Constants.REGEX_ID, "HE123456");
+        id = id.toUpperCase();
 
         return id;
     }
@@ -161,12 +162,16 @@ public class StudentView {
             headerBuilder.append(String.format("%10s", "Semester"));
             headerBuilder.append(String.format("%13s", "Course name"));
 
+            displayMessage("---------------------------------------------------------------");
             displayMessage(headerBuilder.toString());
+            displayMessage("---------------------------------------------------------------");
 
             // Iterate outputs
             for (Student student : studentList) {
                 displayMessage(student.toString());
             }
+            
+            displayMessage("---------------------------------------------------------------");
         }
     }
 
@@ -192,6 +197,7 @@ public class StudentView {
         String searchId;
         
         searchId = validation.getString("Enter student ID: ", Constants.REGEX_ANY, "");
+        searchId = searchId.toUpperCase();
 
         return searchId;
     }
@@ -239,6 +245,7 @@ public class StudentView {
         String newId;
         
         newId = validation.getString("Enter new ID (Enter to keep): ", Constants.REGEX_ANY, "");
+        newId = newId.toUpperCase();
 
         return newId;
     }
@@ -326,10 +333,16 @@ public class StudentView {
             displayMessage("Report list is empty.");
         } else {
             
+            displayMessage("----------------------------------------------");
+            displayMessage(String.format("%-25s | %-10s | %-5s", "Student name", "Course", "Total"));
+            displayMessage("----------------------------------------------");
+
             // Loop data structures strictly mapping formatting representation natively printed
             for (Report report : reportList) {
                 displayMessage(report.toString());
             }
+            
+            displayMessage("----------------------------------------------");
         }
     }
 
