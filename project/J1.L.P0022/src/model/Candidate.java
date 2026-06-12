@@ -5,6 +5,7 @@ package model;
  * Defines common attributes and behavior for Experience, Fresher, and Intern candidates
  */
 public abstract class Candidate {
+
     protected String id;
     protected String firstName;
     protected String lastName;
@@ -14,7 +15,10 @@ public abstract class Candidate {
     protected String email;
     protected int type; // 0=Experience, 1=Fresher, 2=Intern
 
-    public Candidate(String id, String firstName, String lastName,
+    /**
+     * Constructor for Candidate
+     */
+    public Candidate (String id, String firstName, String lastName,
                     int birthDate, String address, String phone,
                     String email, int type) {
         this.id = id;
@@ -27,32 +31,139 @@ public abstract class Candidate {
         this.type = type;
     }
 
-    // Abstract method - must be implemented by subclasses
-    public abstract void display();
-
-    // Common display method
-    public String getCommonInfo() {
-        return firstName + " " + lastName + " | " + birthDate + " | " +
-               address + " | " + phone + " | " + email + " | " + type;
+    /**
+     * Return string representation of Candidate
+     */
+    @Override
+    public String toString () {
+        return getCommonInfo ();
     }
 
-    // Getters
-    public String getId() { return id; }
-    public String getFirstName() { return firstName; }
-    public String getLastName() { return lastName; }
-    public int getBirthDate() { return birthDate; }
-    public String getAddress() { return address; }
-    public String getPhone() { return phone; }
-    public String getEmail() { return email; }
-    public int getType() { return type; }
+    /**
+     * Get common candidate details as formatted string
+     */
+    public String getCommonInfo () {
+        StringBuilder sb;
 
-    // Setters
-    public void setId(String id) { this.id = id; }
-    public void setFirstName(String firstName) { this.firstName = firstName; }
-    public void setLastName(String lastName) { this.lastName = lastName; }
-    public void setBirthDate(int birthDate) { this.birthDate = birthDate; }
-    public void setAddress(String address) { this.address = address; }
-    public void setPhone(String phone) { this.phone = phone; }
-    public void setEmail(String email) { this.email = email; }
-    public void setType(int type) { this.type = type; }
+        sb = new StringBuilder ();
+        sb.append (firstName).append (" ").append (lastName)
+          .append (" | ").append (birthDate)
+          .append (" | ").append (address)
+          .append (" | ").append (phone)
+          .append (" | ").append (email)
+          .append (" | ").append (type);
+        return sb.toString ();
+    }
+
+    /**
+     * Get candidate ID
+     */
+    public String getId () {
+        return id;
+    }
+
+    /**
+     * Set candidate ID
+     */
+    public void setId (String id) {
+        this.id = id;
+    }
+
+    /**
+     * Get first name
+     */
+    public String getFirstName () {
+        return firstName;
+    }
+
+    /**
+     * Set first name
+     */
+    public void setFirstName (String firstName) {
+        this.firstName = firstName;
+    }
+
+    /**
+     * Get last name
+     */
+    public String getLastName () {
+        return lastName;
+    }
+
+    /**
+     * Set last name
+     */
+    public void setLastName (String lastName) {
+        this.lastName = lastName;
+    }
+
+    /**
+     * Get birth date (year)
+     */
+    public int getBirthDate () {
+        return birthDate;
+    }
+
+    /**
+     * Set birth date (year)
+     */
+    public void setBirthDate (int birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    /**
+     * Get address
+     */
+    public String getAddress () {
+        return address;
+    }
+
+    /**
+     * Set address
+     */
+    public void setAddress (String address) {
+        this.address = address;
+    }
+
+    /**
+     * Get phone number
+     */
+    public String getPhone () {
+        return phone;
+    }
+
+    /**
+     * Set phone number
+     */
+    public void setPhone (String phone) {
+        this.phone = phone;
+    }
+
+    /**
+     * Get email address
+     */
+    public String getEmail () {
+        return email;
+    }
+
+    /**
+     * Set email address
+     */
+    public void setEmail (String email) {
+        this.email = email;
+    }
+
+    /**
+     * Get candidate type
+     */
+    public int getType () {
+        return type;
+    }
+
+    /**
+     * Set candidate type
+     */
+    public void setType (int type) {
+        this.type = type;
+    }
 }
