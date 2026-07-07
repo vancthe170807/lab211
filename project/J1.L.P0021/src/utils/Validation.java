@@ -8,12 +8,14 @@ import java.util.Scanner;
 public class Validation {
 
     private final Scanner sc;
+    private final Constants constants;
 
     /**
      * Constructor initializes scanner.
      */
     public Validation () {
         this.sc = new Scanner(System.in);
+        this.constants = new Constants();
     }
 
     /**
@@ -139,7 +141,7 @@ public class Validation {
             boolean isY;
             boolean isN;
             
-            resultStr = getString(msg, Constants.REGEX_YN, "Y or N");
+            resultStr = getString(msg, constants.REGEX_YN, "Y or N");
             
             isY = resultStr.equalsIgnoreCase("Y");
             isN = resultStr.equalsIgnoreCase("N");
@@ -171,7 +173,7 @@ public class Validation {
 
         // Uses loop for regex guard
         while (true) {
-            resultStr = getString(msg, Constants.REGEX_UD, "U or D");
+            resultStr = getString(msg, constants.REGEX_UD, "U or D");
             upperStr = resultStr.toUpperCase();
             
             return upperStr;

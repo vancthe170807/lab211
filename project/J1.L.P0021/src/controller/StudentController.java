@@ -14,6 +14,7 @@ public class StudentController {
 
     private final StudentView view;
     private final StudentModel model;
+    private final Constants constants;
 
     /**
      * Instantiates components cleanly separating blocks formatting mapping interactions explicitly.
@@ -21,6 +22,7 @@ public class StudentController {
     public StudentController () {
         this.view = new StudentView();
         this.model = new StudentModel();
+        this.constants = new Constants();
     }
 
     /**
@@ -130,7 +132,7 @@ public class StudentController {
             }
 
             currentCount = model.getStudentCount();
-            isAboveMin = currentCount >= Constants.MIN_STUDENT;
+            isAboveMin = currentCount >= constants.MIN_STUDENT;
 
             // Conditional logic limits validations
             if (isAboveMin) {

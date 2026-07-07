@@ -5,7 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7def5adb-aa7d-4d42-853b-8c171930850d" name="Changes" comment="fix">
+      <change beforePath="$PROJECT_DIR$/../J1.L.P0021/src/controller/StudentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../J1.L.P0021/src/controller/StudentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../J1.L.P0021/src/utils/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/../J1.L.P0021/src/utils/Constants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../J1.L.P0021/src/utils/Validation.java" beforeDir="false" afterPath="$PROJECT_DIR$/../J1.L.P0021/src/utils/Validation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../J1.L.P0021/src/view/StudentView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../J1.L.P0021/src/view/StudentView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/FruitController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/FruitController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,7 +20,7 @@
   <component name="CopilotChats">
     <option name="panelChat">
       <chat>
-        <option name="activeSessionId" value="68a90d76-095f-4e2c-b736-8cedcdf4db8f" />
+        <option name="activeSessionId" value="f18e1530-ddee-4924-8ace-298e8ca9de4c" />
         <option name="sessions">
           <session>
             <option name="chatType" value="PANEL" />
@@ -23,12 +28,20 @@
             <option name="modeId" value="Ask" />
             <option name="modelType" value="builtin_family" />
             <option name="modelValue" value="gemini-3-flash" />
-            <option name="status" value="Completed" />
+            <option name="status" value="Stopped" />
             <option name="targetType" value="LOCAL" />
           </session>
           <session>
             <option name="chatType" value="PANEL" />
             <option name="id" value="7123e465-1d65-47a3-b928-79a5f6add155" />
+            <option name="modeId" value="Ask" />
+            <option name="modelType" value="builtin_family" />
+            <option name="modelValue" value="auto" />
+            <option name="targetType" value="LOCAL" />
+          </session>
+          <session>
+            <option name="chatType" value="PANEL" />
+            <option name="id" value="f18e1530-ddee-4924-8ace-298e8ca9de4c" />
             <option name="modeId" value="Ask" />
             <option name="modelType" value="builtin_family" />
             <option name="modelValue" value="auto" />
@@ -152,6 +165,8 @@
       <workItem from="1779277765073" duration="783000" />
       <workItem from="1779715473754" duration="656000" />
       <workItem from="1780188215911" duration="201000" />
+      <workItem from="1783045973440" duration="2069000" />
+      <workItem from="1783436264035" duration="1114000" />
     </task>
     <servers />
   </component>

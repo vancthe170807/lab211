@@ -12,12 +12,14 @@ import utils.Validation;
 public class StudentView {
 
     private final Validation validation;
+    private final Constants constants;
 
     /**
      * Initiates external validation utilities class.
      */
     public StudentView () {
         this.validation = new Validation();
+        this.constants = new Constants();
     }
 
     /**
@@ -42,7 +44,7 @@ public class StudentView {
 
         displayMessage(menuBuilder.toString());
         
-        choice = validation.getInteger("", Constants.MIN_CHOICE, Constants.MAX_CHOICE);
+        choice = validation.getInteger("", constants.MIN_CHOICE, constants.MAX_CHOICE);
 
         return choice;
     }
@@ -55,7 +57,7 @@ public class StudentView {
     public String inputStudentId () {
         String id;
         
-        id = validation.getString("Enter student's id: ", Constants.REGEX_ID, "HE123456");
+        id = validation.getString("Enter student's id: ", constants.REGEX_ID, "HE123456");
         id = id.toUpperCase();
 
         return id;
@@ -69,7 +71,7 @@ public class StudentView {
     public String inputStudentName () {
         String name;
         
-        name = validation.getString("Enter student's name: ", Constants.REGEX_NAME, "Nguyen Van A");
+        name = validation.getString("Enter student's name: ", constants.REGEX_NAME, "Nguyen Van A");
 
         return name;
     }
@@ -82,7 +84,7 @@ public class StudentView {
     public int inputSemester () {
         int semester;
         
-        semester = validation.getInteger("Enter student's semester: ", Constants.MIN_SEMESTER, Constants.MAX_SEMESTER);
+        semester = validation.getInteger("Enter student's semester: ", constants.MIN_SEMESTER, constants.MAX_SEMESTER);
 
         return semester;
     }
@@ -103,12 +105,12 @@ public class StudentView {
             boolean isCpp;
             boolean isValid;
 
-            course = validation.getString("Enter course (Java, .Net, C/C++): ", Constants.REGEX_ANY, "Java");
+            course = validation.getString("Enter course (Java, .Net, C/C++): ", constants.REGEX_ANY, "Java");
             
-            isJava = course.equalsIgnoreCase(Constants.COURSE_JAVA);
-            isNet = course.equalsIgnoreCase(Constants.COURSE_NET);
-            isC = course.equalsIgnoreCase(Constants.COURSE_C);
-            isCpp = course.equalsIgnoreCase(Constants.COURSE_CPP);
+            isJava = course.equalsIgnoreCase(constants.COURSE_JAVA);
+            isNet = course.equalsIgnoreCase(constants.COURSE_NET);
+            isC = course.equalsIgnoreCase(constants.COURSE_C);
+            isCpp = course.equalsIgnoreCase(constants.COURSE_CPP);
 
             isValid = isJava || 
                       isNet || 
@@ -183,7 +185,7 @@ public class StudentView {
     public String inputSearchName () {
         String searchName;
         
-        searchName = validation.getString("Enter name to search: ", Constants.REGEX_ANY, "");
+        searchName = validation.getString("Enter name to search: ", constants.REGEX_ANY, "");
 
         return searchName;
     }
@@ -196,7 +198,7 @@ public class StudentView {
     public String inputSearchId () {
         String searchId;
         
-        searchId = validation.getString("Enter student ID: ", Constants.REGEX_ANY, "");
+        searchId = validation.getString("Enter student ID: ", constants.REGEX_ANY, "");
         searchId = searchId.toUpperCase();
 
         return searchId;
@@ -244,7 +246,7 @@ public class StudentView {
     public String inputOptionalId () {
         String newId;
         
-        newId = validation.getString("Enter new ID (Enter to keep): ", Constants.REGEX_ANY, "");
+        newId = validation.getString("Enter new ID (Enter to keep): ", constants.REGEX_ANY, "");
         newId = newId.toUpperCase();
 
         return newId;
@@ -258,7 +260,7 @@ public class StudentView {
     public String inputOptionalName () {
         String newName;
         
-        newName = validation.getString("Enter new name (Enter to keep): ", Constants.REGEX_ANY, "");
+        newName = validation.getString("Enter new name (Enter to keep): ", constants.REGEX_ANY, "");
 
         return newName;
     }
@@ -271,7 +273,7 @@ public class StudentView {
     public int inputOptionalSemester () {
         int newSemester;
         
-        newSemester = validation.getInteger("Enter new semester (0 to keep): ", 0, Constants.MAX_SEMESTER);
+        newSemester = validation.getInteger("Enter new semester (0 to keep): ", 0, constants.MAX_SEMESTER);
 
         return newSemester;
     }
@@ -293,12 +295,12 @@ public class StudentView {
             boolean isEmptyInput;
             boolean isValid;
 
-            newCourse = validation.getString("Enter new course (Enter to keep): ", Constants.REGEX_ANY, "");
+            newCourse = validation.getString("Enter new course (Enter to keep): ", constants.REGEX_ANY, "");
             
-            isJava = newCourse.equalsIgnoreCase(Constants.COURSE_JAVA);
-            isNet = newCourse.equalsIgnoreCase(Constants.COURSE_NET);
-            isC = newCourse.equalsIgnoreCase(Constants.COURSE_C);
-            isCpp = newCourse.equalsIgnoreCase(Constants.COURSE_CPP);
+            isJava = newCourse.equalsIgnoreCase(constants.COURSE_JAVA);
+            isNet = newCourse.equalsIgnoreCase(constants.COURSE_NET);
+            isC = newCourse.equalsIgnoreCase(constants.COURSE_C);
+            isCpp = newCourse.equalsIgnoreCase(constants.COURSE_CPP);
             isEmptyInput = newCourse.isEmpty();
 
             isValid = isJava || 
