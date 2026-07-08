@@ -1,7 +1,7 @@
 package model;
 
 /**
- * Model class for student entity.
+ * Represents a student record in the application.
  */
 public class Student implements Comparable<Student> {
 
@@ -11,18 +11,18 @@ public class Student implements Comparable<Student> {
     private String courseName;
 
     /**
-     * Default constructor.
+     * Creates an empty student object.
      */
     public Student () {
     }
 
     /**
-     * Parameterized constructor.
-     * 
-     * @param id Student ID
-     * @param semester Semester value
-     * @param name Student name
-     * @param courseName Name of course
+     * Creates a student with the given details.
+     *
+     * @param id The student ID.
+     * @param semester The semester number.
+     * @param name The student name.
+     * @param courseName The course name.
      */
     public Student (String id, int semester, String name, String courseName) {
         this.id = id;
@@ -64,10 +64,10 @@ public class Student implements Comparable<Student> {
     }
 
     /**
-     * Compares this student to another by name.
-     * 
-     * @param other Student to compare with
-     * @return Comparison int
+     * Compares this student with another student by name.
+     *
+     * @param other The student to compare with.
+     * @return A negative, zero, or positive value based on name comparison.
      */
     @Override
     public int compareTo (Student other) {
@@ -75,9 +75,9 @@ public class Student implements Comparable<Student> {
     }
 
     /**
-     * Formats student attributes.
-     * 
-     * @return Formatted string
+     * Returns a formatted string representation of the student.
+     *
+     * @return A formatted string containing student details.
      */
     @Override
     public String toString () {

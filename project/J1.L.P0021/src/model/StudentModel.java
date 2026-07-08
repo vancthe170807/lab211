@@ -4,23 +4,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- * Model class containing data logic and list management.
+ * Handles the student data logic and list operations.
  */
 public class StudentModel {
 
     private final ArrayList<Student> studentList;
 
     /**
-     * Constructor allocating the internal list.
+     * Initializes the internal student list.
      */
     public StudentModel () {
         this.studentList = new ArrayList<>();
     }
 
     /**
-     * Returns the size of the student list.
-     * 
-     * @return Element count
+     * Returns the number of students currently stored.
+     *
+     * @return The size of the student list.
      */
     public int getStudentCount () {
         int count;
@@ -31,28 +31,27 @@ public class StudentModel {
     }
 
     /**
-     * Adds an institutional student.
-     * 
-     * @param student Object to append
+     * Adds a student to the list.
+     *
+     * @param student The student to add.
      */
     public void addStudent (Student student) {
         studentList.add(student);
     }
 
     /**
-     * Finds if a student explicitly registered in a semester.
-     * 
-     * @param id Searched ID
-     * @param semester Semester number
-     * @param course Course string
-     * @return Logical state of existence
+     * Checks whether the same student is already registered for the same semester and course.
+     *
+     * @param id The student ID to check.
+     * @param semester The semester to check.
+     * @param course The course to check.
+     * @return True if the student is already registered, otherwise false.
      */
     public boolean checkStudentRegistered (String id, int semester, String course) {
         boolean isRegistered;
         
         isRegistered = false;
 
-        // Iterate verifying every registered class
         for (Student student : studentList) {
             boolean isSameId;
             boolean isSameSemester;
@@ -67,7 +66,6 @@ public class StudentModel {
                       isSameSemester && 
                       isSameCourse;
 
-            // Trigger registration collision
             if (isMatch) {
                 isRegistered = true;
                 break;
@@ -78,23 +76,21 @@ public class StudentModel {
     }
 
     /**
-     * Gets a saved name corresponding an ID natively.
-     * 
-     * @param id Key ID
-     * @return Retreived name or empty
+     * Finds the name of a student by ID.
+     *
+     * @param id The student ID to search for.
+     * @return The matching student name, or an empty string if not found.
      */
     public String findNameById (String id) {
         String name;
         
         name = "";
 
-        // Seek the ID on the collection
         for (Student student : studentList) {
             boolean isSameId;
             
             isSameId = student.getId().equalsIgnoreCase(id);
 
-            // Harvest the entity name safely
             if (isSameId) {
                 name = student.getName();
                 break;
@@ -105,17 +101,16 @@ public class StudentModel {
     }
 
     /**
-     * Collects and sorts elements that contain a text target.
-     * 
-     * @param searchName Search key
-     * @return Built arrayList referencing matching entities
+     * Finds students whose names contain the given search string and sorts the results by name.
+     *
+     * @param searchName The name fragment to search for.
+     * @return A sorted list of matching students.
      */
     public ArrayList<Student> findAndSortStudents (String searchName) {
         ArrayList<Student> resultList;
         
         resultList = new ArrayList<>();
 
-        // Loop traversing strings
         for (Student student : studentList) {
             String lowerName;
             String lowerSearch;
@@ -125,36 +120,32 @@ public class StudentModel {
             lowerSearch = searchName.toLowerCase();
             containsName = lowerName.contains(lowerSearch);
 
-            // Pack if strings overlap
             if (containsName) {
                 resultList.add(student);
             }
         }
 
-        // Apply Java sorting scheme
         Collections.sort(resultList);
 
         return resultList;
     }
 
     /**
-     * Gets a list of elements that correspond an ID.
-     * 
-     * @param id Requested key
-     * @return List matching query
+     * Finds all students with the given ID.
+     *
+     * @param id The student ID to search for.
+     * @return A list of matching students.
      */
     public ArrayList<Student> findStudentsById (String id) {
         ArrayList<Student> resultList;
         
         resultList = new ArrayList<>();
 
-        // Traverses the entire container for identical IDs
         for (Student student : studentList) {
             boolean isMatch;
             
             isMatch = student.getId().equalsIgnoreCase(id);
 
-            // Stack on array
             if (isMatch) {
                 resultList.add(student);
             }
@@ -164,12 +155,12 @@ public class StudentModel {
     }
 
     /**
-     * In-place mutates properties of a single entity.
-     * 
-     * @param student Target pointing to update
-     * @param id Valid new ID
-     * @param semester Filtered numerical input
-     * @param course Valid new course string
+     * Updates the properties of a student record.
+     *
+     * @param student The student to update.
+     * @param id The new ID to apply.
+     * @param semester The new semester to apply.
+     * @param course The new course to apply.
      */
     public void updateStudentProperties (Student student, String id, int semester, String course) {
         boolean isIdValid;
@@ -180,37 +171,31 @@ public class StudentModel {
         isSemesterValid = semester > 0;
         isCourseValid = !course.isEmpty();
 
-        // Evaluate conditions step by step
         if (isIdValid) {
             student.setId(id);
         }
 
-        // Pass integer logic correctly
         if (isSemesterValid) {
             student.setSemester(semester);
         }
 
-        // Add valid class texts
         if (isCourseValid) {
             student.setCourseName(course);
         }
     }
 
     /**
-     * Modifies related names throughout the whole DB records.
-     * 
-     * @param id Search key
-     * @param newName Input defining changes
+     * Updates the name of all students that share the given ID.
+     *
+     * @param id The student ID to match.
+     * @param newName The new name to set.
      */
     public void updateStudentNameGlobally (String id, String newName) {
-        
-        // Loop targeting all identically linked students
         for (Student student : studentList) {
             boolean isMatch;
             
             isMatch = student.getId().equalsIgnoreCase(id);
 
-            // Reconstruct name definition
             if (isMatch) {
                 student.setName(newName);
             }
@@ -218,25 +203,24 @@ public class StudentModel {
     }
 
     /**
-     * Removes an exact record mapping object relation.
-     * 
-     * @param student Item representation internally
+     * Deletes a student from the list.
+     *
+     * @param student The student to remove.
      */
     public void deleteStudent (Student student) {
         studentList.remove(student);
     }
 
     /**
-     * Summarizes existing courses array representation list.
-     * 
-     * @return Consolidated reports mapping count per entities
+     * Generates a report list based on existing student data.
+     *
+     * @return A list of reports summarizing student-course counts.
      */
     public ArrayList<Report> generateReports () {
         ArrayList<Report> reportList;
         
         reportList = new ArrayList<>();
 
-        // External cycle generating objects on report model
         for (Student student : studentList) {
             int count;
             boolean exists;
@@ -244,7 +228,6 @@ public class StudentModel {
             count = 0;
             exists = false;
 
-            // Internal evaluation to merge quantities correctly
             for (Student check : studentList) {
                 boolean isSameId;
                 boolean isSameCourse;
@@ -255,13 +238,11 @@ public class StudentModel {
                 isCorrelated = isSameId && 
                                isSameCourse;
 
-                // Tally occurrences strictly isolated
                 if (isCorrelated) {
                     count = count + 1;
                 }
             }
 
-            // Exclude repetitions inside tracking structures
             for (Report report : reportList) {
                 boolean isSameName;
                 boolean isSameCourseReport;
@@ -272,14 +253,12 @@ public class StudentModel {
                 isDuplicated = isSameName && 
                                isSameCourseReport;
 
-                // Stop duplicate injections immediately 
                 if (isDuplicated) {
                     exists = true;
                     break;
                 }
             }
 
-            // Populate valid data block 
             if (!exists) {
                 Report newReport;
                 

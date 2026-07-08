@@ -1,7 +1,7 @@
 package model;
 
 /**
- * Model class for counting courses of students.
+ * Represents a summary report for a student's course registration.
  */
 public class Report {
 
@@ -10,11 +10,11 @@ public class Report {
     private int totalCourse;
 
     /**
-     * Constructor for Report class.
-     * 
-     * @param studentName Name of the student
-     * @param courseName Course designated
-     * @param totalCourse Amount of assignments
+     * Creates a report with the provided values.
+     *
+     * @param studentName The student's name.
+     * @param courseName The course name.
+     * @param totalCourse The number of registrations for the course.
      */
     public Report (String studentName, String courseName, int totalCourse) {
         this.studentName = studentName;
@@ -47,9 +47,9 @@ public class Report {
     }
 
     /**
-     * Translates report to formatted string.
-     * 
-     * @return Formatted string representation
+     * Returns the report as a formatted string.
+     *
+     * @return A formatted string representation of the report.
      */
     @Override
     public String toString () {

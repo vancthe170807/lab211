@@ -1,14 +1,14 @@
 package controller;
 
-import view.StudentView;
-import model.StudentModel;
-import model.Student;
-import model.Report;
-import utils.Constants;
 import java.util.ArrayList;
+import model.Report;
+import model.Student;
+import model.StudentModel;
+import utils.Constants;
+import view.StudentView;
 
 /**
- * Controller orchestrating program lifecycle.
+ * Controls the main flow of the student management application.
  */
 public class StudentController {
 
@@ -17,7 +17,7 @@ public class StudentController {
     private final Constants constants;
 
     /**
-     * Instantiates components cleanly separating blocks formatting mapping interactions explicitly.
+     * Initializes the view, model, and constants used by the controller.
      */
     public StudentController () {
         this.view = new StudentView();
@@ -26,14 +26,13 @@ public class StudentController {
     }
 
     /**
-     * Program operational sequence orchestrator handling decisions loop structure cleanly maps routines flow.
+     * Runs the main application loop and handles user menu choices.
      */
     public void run () {
         boolean isRunning;
         
         isRunning = true;
 
-        // Loop traversing options iterations unconditionally executing evaluations mapping logic limits properly formats blocks statements explicit rules iteratively.
         while (isRunning) {
             int choice;
             
@@ -68,7 +67,7 @@ public class StudentController {
     }
 
     /**
-     * Procedure initiating arrays operations capturing interactions models iterations mappings.
+     * Handles the process of creating a new student record.
      */
     private void handleCreateStudent () {
         boolean isAdding;
@@ -77,7 +76,6 @@ public class StudentController {
 
         view.displayMessage("-----------Create Student-------------");
 
-        // Loop capturing variables natively
         while (isAdding) {
             String id;
             String name;
@@ -90,7 +88,6 @@ public class StudentController {
             id = view.inputStudentId();
             name = model.findNameById(id);
 
-            // Conditional branching ensuring accurate evaluations strings mapping formatting variables blocks representations
             if (name.isEmpty()) {
                 name = view.inputStudentName();
             } else {
@@ -109,7 +106,6 @@ public class StudentController {
 
             isRegistered = model.checkStudentRegistered(id, semester, course);
 
-            // Validates database rules representations accurately matching checks conditionally formatting blocks natively.
             if (isRegistered) {
                 StringBuilder errorBuilder;
                 
@@ -134,13 +130,11 @@ public class StudentController {
             currentCount = model.getStudentCount();
             isAboveMin = currentCount >= constants.MIN_STUDENT;
 
-            // Conditional logic limits validations
             if (isAboveMin) {
                 boolean shouldContinue;
                 
                 shouldContinue = view.askContinue();
 
-                // Branch validation structure
                 if (!shouldContinue) {
                     isAdding = false;
                 }
@@ -149,7 +143,7 @@ public class StudentController {
     }
 
     /**
-     * Executes queries mapping logic evaluations cleanly formatting iterations natively outputs representations strings formatting properly.
+     * Handles searching and sorting students by name.
      */
     private void handleFindAndSort () {
         int listSize;
@@ -160,7 +154,6 @@ public class StudentController {
         listSize = model.getStudentCount();
         isEmpty = listSize == 0;
 
-        // Verify array evaluation conditionally mapping logical statements outputs formatting correctly variables blocks iterations natively.
         if (isEmpty) {
             view.displayMessage("List empty.");
         } else {
@@ -172,7 +165,6 @@ public class StudentController {
             resultList = model.findAndSortStudents(searchString);
             isResultEmpty = resultList.isEmpty();
 
-            // Branch validation conditional arrays outputs explicitly string representations iterations explicitly rules bounds formatting logical mapped elements strictly.
             if (isResultEmpty) {
                 view.displayMessage("No student found.");
             } else {
@@ -182,7 +174,7 @@ public class StudentController {
     }
 
     /**
-     * Processes mapping conditionally formatting mutations operations strings array iterations logic matching requirements explicitly natively accurately routines variables structurally properly strings correctly.
+     * Handles updating or deleting a student record.
      */
     private void handleUpdateOrDelete () {
         int listSize;
@@ -193,7 +185,6 @@ public class StudentController {
         listSize = model.getStudentCount();
         isEmpty = listSize == 0;
 
-        // Verify emptiness conditional expressions
         if (isEmpty) {
             view.displayMessage("List empty.");
         } else {
@@ -205,7 +196,6 @@ public class StudentController {
             foundList = model.findStudentsById(id);
             isFoundEmpty = foundList.isEmpty();
 
-            // Match conditionals
             if (isFoundEmpty) {
                 view.displayMessage("Student not found.");
             } else {
@@ -220,7 +210,6 @@ public class StudentController {
                 foundSize = foundList.size();
                 hasMultiple = foundSize > 1;
 
-                // Pick entity mapped index matching cleanly explicitly conditional evaluations logic strictly explicitly formatted blocks iterations string logic logically operations.
                 if (hasMultiple) {
                     int choiceIndex;
                     
@@ -234,7 +223,6 @@ public class StudentController {
                 operationMode = view.inputUpdateOrDelete();
                 isUpdate = operationMode.equals("U");
 
-                // Execute modifications validations explicitly rules accurately representations blocks loops internally safely mapping validations.
                 if (isUpdate) {
                     String newId;
                     String newName;
@@ -246,7 +234,6 @@ public class StudentController {
                     newName = view.inputOptionalName();
                     hasName = !newName.isEmpty();
                     
-                    // Evaluate condition arrays strictly representations mutations 
                     if (hasName) {
                         model.updateStudentNameGlobally(selectedStudent.getId(), newName);
                     }
@@ -267,7 +254,7 @@ public class StudentController {
     }
 
     /**
-     * Deals generation reports formatting routines strings objects properly variables constraints loops safely logic implementations strings validations routines limits mapping arrays structures correctly bounded correctly strings natively appropriately.
+     * Handles generating and displaying the report list.
      */
     private void handleReport () {
         int listSize;
@@ -278,7 +265,6 @@ public class StudentController {
         listSize = model.getStudentCount();
         isEmpty = listSize == 0;
 
-        // Gate logic conditional execution outputting mapping cleanly boundaries
         if (isEmpty) {
             view.displayMessage("List empty.");
         } else {

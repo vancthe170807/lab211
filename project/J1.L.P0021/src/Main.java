@@ -1,14 +1,14 @@
 import controller.StudentController;
 
 /**
- * Runner class initializing environment rules mapping iterations objects explicit correctly variables cleanly constraints structurally mappings properly explicitly operations.
+ * Entry point of the student management application.
  */
 public class Main {
     
     /**
-     * System executable method strictly mappings operations variables constraints accurately outputs safely blocks mappings.
-     * 
-     * @param args System strings configurations mappings arrays routines formatting mappings routines correctly loops variables explicit bounds.
+     * Starts the application by creating the controller and running the program.
+     *
+     * @param args Command-line arguments passed to the program.
      */
     public static void main (String[] args) {
         StudentController controller;

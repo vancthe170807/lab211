@@ -7,7 +7,7 @@ import utils.Constants;
 import utils.Validation;
 
 /**
- * View class handling terminal I/O.
+ * Handles user interaction for the student management console.
  */
 public class StudentView {
 
@@ -15,7 +15,7 @@ public class StudentView {
     private final Constants constants;
 
     /**
-     * Initiates external validation utilities class.
+     * Initializes the validation and constants helpers used by the view.
      */
     public StudentView () {
         this.validation = new Validation();
@@ -23,9 +23,9 @@ public class StudentView {
     }
 
     /**
-     * Interacts building string layout of main application layout.
-     * 
-     * @return Checked choice
+     * Displays the main menu and returns the user's selected option.
+     *
+     * @return The chosen menu option.
      */
     public int displayMenuAndGetChoice () {
         int choice;
@@ -33,7 +33,7 @@ public class StudentView {
 
         menuBuilder = new StringBuilder();
         
-        // Build lines independently preserving standard concatenations rules
+        // Build the main menu text
         menuBuilder.append("WELCOME TO STUDENT MANAGEMENT\n");
         menuBuilder.append("\t1. Create\n");
         menuBuilder.append("\t2. Find and Sort\n");
@@ -50,9 +50,9 @@ public class StudentView {
     }
 
     /**
-     * Captures rigorously parsed identity data.
-     * 
-     * @return Verified string sequence
+     * Prompts the user to enter a student ID and returns it in uppercase.
+     *
+     * @return A validated student ID.
      */
     public String inputStudentId () {
         String id;
@@ -64,9 +64,9 @@ public class StudentView {
     }
 
     /**
-     * Handles string scanning for explicit names.
-     * 
-     * @return Clear alphabetic array text
+     * Prompts the user to enter a student name.
+     *
+     * @return A validated student name.
      */
     public String inputStudentName () {
         String name;
@@ -77,9 +77,9 @@ public class StudentView {
     }
 
     /**
-     * Gathers validated int from console representing semester.
-     * 
-     * @return Integer
+     * Prompts the user to enter a semester number.
+     *
+     * @return A validated semester value.
      */
     public int inputSemester () {
         int semester;
@@ -90,14 +90,13 @@ public class StudentView {
     }
 
     /**
-     * Fetches correctly mapped classes strings.
-     * 
-     * @return Standard verified text representing selection
+     * Prompts the user to enter a valid course name until the input is accepted.
+     *
+     * @return A validated course name.
      */
     public String inputCourse () {
         String course;
         
-        // Loop controlling accurate course insertion loop
         while (true) {
             boolean isJava;
             boolean isNet;
@@ -117,7 +116,6 @@ public class StudentView {
                       isC || 
                       isCpp;
 
-            // Escapes infinite evaluation validation block continuously safely
             if (isValid) {
                 break;
             }
@@ -129,9 +127,9 @@ public class StudentView {
     }
 
     /**
-     * Verifies intentions regarding continuous operations processing iteratively strings.
-     * 
-     * @return Output state indicating decisions
+     * Asks whether the user wants to continue the program.
+     *
+     * @return True if the user chooses to continue, otherwise false.
      */
     public boolean askContinue () {
         boolean isContinue;
@@ -142,16 +140,15 @@ public class StudentView {
     }
 
     /**
-     * Formats multiple entries internally utilizing array representation iterations output blocks cleanly separatedly.
-     * 
-     * @param studentList Reference holding model
+     * Displays the list of students in a formatted table.
+     *
+     * @param studentList The list of students to display.
      */
     public void displayStudentList (ArrayList<Student> studentList) {
         boolean isEmpty;
         
         isEmpty = studentList.isEmpty();
 
-        // Control structure ensuring items exist
         if (isEmpty) {
             displayMessage("Student list is currently empty.");
         } else {
@@ -168,7 +165,6 @@ public class StudentView {
             displayMessage(headerBuilder.toString());
             displayMessage("---------------------------------------------------------------");
 
-            // Iterate outputs
             for (Student student : studentList) {
                 displayMessage(student.toString());
             }
@@ -178,9 +174,9 @@ public class StudentView {
     }
 
     /**
-     * Interactively checks search criteria.
-     * 
-     * @return Free string
+     * Prompts the user to enter a name for searching.
+     *
+     * @return The search name entered by the user.
      */
     public String inputSearchName () {
         String searchName;
@@ -191,9 +187,9 @@ public class StudentView {
     }
 
     /**
-     * Receives matching criteria.
-     * 
-     * @return Free format string
+     * Prompts the user to enter a student ID for searching.
+     *
+     * @return The search ID entered by the user.
      */
     public String inputSearchId () {
         String searchId;
@@ -205,10 +201,10 @@ public class StudentView {
     }
 
     /**
-     * Handles specific integer capturing ensuring bounds limits properly isolated rules compliant.
-     * 
-     * @param maxIndex Max size count globally bound mapped.
-     * @return Single item value correctly isolated
+     * Prompts the user to choose a record by index within the allowed range.
+     *
+     * @param maxIndex The maximum allowed index value.
+     * @return The selected index.
      */
     public int inputChoiceIndex (int maxIndex) {
         int index;
@@ -226,9 +222,9 @@ public class StudentView {
     }
 
     /**
-     * Gathers selection code characters matching specific states efficiently returning strings.
-     * 
-     * @return Action representation U D formatted explicitly.
+     * Asks whether the user wants to update or delete a record.
+     *
+     * @return The selected action, either U or D.
      */
     public String inputUpdateOrDelete () {
         String choice;
@@ -239,9 +235,9 @@ public class StudentView {
     }
 
     /**
-     * Deals updating specific parameter skipping verification empty characters optionally properly aligned. 
-     * 
-     * @return Retreivable generic strings format representations explicit regex
+     * Prompts the user to enter a new ID, allowing an empty input to keep the existing value.
+     *
+     * @return The new ID or an empty string if the user keeps the current value.
      */
     public String inputOptionalId () {
         String newId;
@@ -253,9 +249,9 @@ public class StudentView {
     }
 
     /**
-     * Optional skipping parameters similarly evaluated mapped format characters checking.
-     * 
-     * @return Clean optional representation strings formats mapping precisely values
+     * Prompts the user to enter a new name, allowing an empty input to keep the existing value.
+     *
+     * @return The new name or an empty string if the user keeps the current value.
      */
     public String inputOptionalName () {
         String newName;
@@ -266,9 +262,9 @@ public class StudentView {
     }
 
     /**
-     * Scans bounded range optional elements preserving default representation properly bounded numbers limits formatting integers.
-     * 
-     * @return Limited elements correctly verified options
+     * Prompts the user to enter a new semester, allowing 0 to keep the existing value.
+     *
+     * @return The new semester value or 0 if the user keeps the current value.
      */
     public int inputOptionalSemester () {
         int newSemester;
@@ -279,14 +275,13 @@ public class StudentView {
     }
 
     /**
-     * Retrieves limited values conditionally validating options identically previously mapping strings.
-     * 
-     * @return Correct format matching exact requirements
+     * Prompts the user to enter a new course, allowing an empty input to keep the existing value.
+     *
+     * @return The new course name or an empty string if the user keeps the current value.
      */
     public String inputOptionalCourse () {
         String newCourse;
         
-        // Loop controlling accurate optional updating logic conditionally bounds formatting iterations strictly checking texts arrays 
         while (true) {
             boolean isJava;
             boolean isNet;
@@ -309,7 +304,6 @@ public class StudentView {
                       isCpp || 
                       isEmptyInput;
 
-            // Escapes loop evaluations
             if (isValid) {
                 break;
             }
@@ -321,16 +315,15 @@ public class StudentView {
     }
 
     /**
-     * Evaluates arrays containing data iterating format mapping structures outputs strings.
-     * 
-     * @param reportList Arrays
+     * Displays the report list in a formatted table.
+     *
+     * @param reportList The list of reports to display.
      */
     public void displayReportList (ArrayList<Report> reportList) {
         boolean isEmpty;
         
         isEmpty = reportList.isEmpty();
 
-        // Assesses output possibility conditionally evaluating array
         if (isEmpty) {
             displayMessage("Report list is empty.");
         } else {
@@ -339,7 +332,6 @@ public class StudentView {
             displayMessage(String.format("%-25s | %-10s | %-5s", "Student name", "Course", "Total"));
             displayMessage("----------------------------------------------");
 
-            // Loop data structures strictly mapping formatting representation natively printed
             for (Report report : reportList) {
                 displayMessage(report.toString());
             }
@@ -349,9 +341,9 @@ public class StudentView {
     }
 
     /**
-     * Base interactions mapping standard system layouts internally cleanly strings
-     * 
-     * @param message Text variables explicitly
+     * Prints the given message to the console.
+     *
+     * @param message The message to display.
      */
     public void displayMessage (String message) {
         System.out.println(message);

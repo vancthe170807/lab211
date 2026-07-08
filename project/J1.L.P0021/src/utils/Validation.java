@@ -3,7 +3,7 @@ package utils;
 import java.util.Scanner;
 
 /**
- * Validation class to verify user inputs.
+ * Validates user input for the console application.
  */
 public class Validation {
 
@@ -11,7 +11,7 @@ public class Validation {
     private final Constants constants;
 
     /**
-     * Constructor initializes scanner.
+     * Initializes the scanner and constants helper.
      */
     public Validation () {
         this.sc = new Scanner(System.in);
@@ -19,17 +19,16 @@ public class Validation {
     }
 
     /**
-     * Gets a valid integer input from console.
-     * 
-     * @param msg Input prompt
-     * @param min Minimum bound
-     * @param max Maximum bound
-     * @return Validated integer
+     * Reads a valid integer input from the console.
+     *
+     * @param msg The prompt shown to the user.
+     * @param min The minimum allowed value.
+     * @param max The maximum allowed value.
+     * @return A validated integer within the given range.
      */
     public int getInteger (String msg, int min, int max) {
         int output;
         
-        // Loop continuously to fetch number
         while (true) {
             String input;
             boolean isEmpty;
@@ -39,7 +38,6 @@ public class Validation {
             input = sc.nextLine();
             isEmpty = input.isEmpty();
 
-            // Handle empty input
             if (isEmpty) {
                 System.out.println("Input cannot be empty, please try again");
                 continue;
@@ -57,7 +55,6 @@ public class Validation {
                 isOutOfRange = isTooSmall || 
                                isTooLarge;
 
-                // Validate boundaries
                 if (isOutOfRange) {
                     StringBuilder rangeBuilder;
                     
@@ -83,17 +80,16 @@ public class Validation {
     }
 
     /**
-     * Gets a string matching designated regex pattern.
-     * 
-     * @param msg Input prompt
-     * @param regex Regex pattern
-     * @param exampleOfRegex Expected example
-     * @return Validated string
+     * Reads a string that matches the given regular expression.
+     *
+     * @param msg The prompt shown to the user.
+     * @param regex The regular expression pattern.
+     * @param exampleOfRegex An example of the expected format.
+     * @return A validated string.
      */
     public String getString (String msg, String regex, String exampleOfRegex) {
         String output;
         
-        // Loop formatting loop
         while (true) {
             boolean isEmptyRegex;
             boolean isMatch;
@@ -108,7 +104,6 @@ public class Validation {
             isValid = isEmptyRegex || 
                       isMatch;
 
-            // Check if string adheres to rules
             if (isValid) {
                 break;
             } else {
@@ -127,15 +122,14 @@ public class Validation {
     }
 
     /**
-     * Gets binary choice Y or N.
-     * 
-     * @param msg Input prompt
-     * @return boolean evaluation of choice
+     * Reads a yes/no choice from the user.
+     *
+     * @param msg The prompt shown to the user.
+     * @return True for Y, false for N.
      */
     public boolean checkYN (String msg) {
         boolean resultBool;
         
-        // Loop binary input check
         while (true) {
             String resultStr;
             boolean isY;
@@ -146,7 +140,6 @@ public class Validation {
             isY = resultStr.equalsIgnoreCase("Y");
             isN = resultStr.equalsIgnoreCase("N");
 
-            // Evaluate branches to boolean
             if (isY) {
                 resultBool = true;
                 break;
@@ -162,16 +155,15 @@ public class Validation {
     }
 
     /**
-     * Gets Update or Delete string character.
-     * 
-     * @param msg Input prompt
-     * @return Upper cased U or D
+     * Reads an update/delete choice from the user.
+     *
+     * @param msg The prompt shown to the user.
+     * @return A normalized value of U or D.
      */
     public String checkUD (String msg) {
         String resultStr;
         String upperStr;
 
-        // Uses loop for regex guard
         while (true) {
             resultStr = getString(msg, constants.REGEX_UD, "U or D");
             upperStr = resultStr.toUpperCase();
