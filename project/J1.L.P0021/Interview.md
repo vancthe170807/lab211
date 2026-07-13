@@ -60,85 +60,195 @@ Project này là một chương trình Java quản lý sinh viên bằng console
 - Hỗ trợ kiểm tra dữ liệu nhập vào từ người dùng
 - Kiểm tra số nguyên, chuỗi, lựa chọn Y/N, U/D
 
-## 4. Các hàm quan trọng và ý nghĩa
-### Trong Main
+## 4. Giải thích chi tiết từng class và hàm
+### 4.1 Main
+- Main là lớp khởi động chương trình.
 - main(String[] args)
-  - Khởi tạo StudentController
-  - Gọi controller.run()
+  - Đây là hàm chính của chương trình.
+  - Nó tạo đối tượng StudentController và gọi controller.run() để bắt đầu vòng đời của ứng dụng.
 
-### Trong StudentController
+### 4.2 StudentController
+- StudentController là lớp điều phối luồng chương trình.
+- Nó nhận dữ liệu từ View, gọi Model để xử lý, rồi hiển thị kết quả lại cho người dùng.
+
+- StudentController()
+  - Hàm khởi tạo.
+  - Tạo các đối tượng view, model, constants để sử dụng cho toàn bộ chương trình.
+
 - run()
-  - Vòng lặp chính của chương trình
-  - Hiển thị menu và điều hướng chức năng
+  - Đây là hàm vòng lặp chính của chương trình.
+  - Hiển thị menu, nhận lựa chọn từ người dùng, rồi gọi hàm tương ứng cho từng chức năng.
 
 - handleCreateStudent()
-  - Nhập thông tin sinh viên
-  - Kiểm tra trùng lặp
-  - Thêm sinh viên vào danh sách
+  - Xử lý chức năng tạo sinh viên mới.
+  - Nhập ID, tên, học kỳ, khóa học.
+  - Kiểm tra xem sinh viên này đã tồn tại hay chưa.
+  - Nếu chưa tồn tại thì thêm vào danh sách.
 
 - handleFindAndSort()
-  - Nhập tên cần tìm
-  - Tìm sinh viên phù hợp
-  - Sắp xếp theo tên
+  - Xử lý chức năng tìm sinh viên theo tên.
+  - Nhập chuỗi tìm kiếm, gọi Model lọc kết quả và sắp xếp lại theo tên.
+  - Sau đó hiển thị danh sách tìm được.
 
 - handleUpdateOrDelete()
-  - Tìm sinh viên bằng ID
-  - Chọn bản ghi cần sửa/xóa
-  - Thực hiện update hoặc delete
+  - Xử lý chức năng cập nhật hoặc xóa sinh viên.
+  - Tìm sinh viên theo ID.
+  - Cho phép người dùng chọn bản ghi và quyết định cập nhật hay xóa.
 
 - handleReport()
-  - Tạo báo cáo thống kê
-  - Hiển thị kết quả cho người dùng
+  - Xử lý chức năng tạo báo cáo.
+  - Gọi Model để tổng hợp dữ liệu và hiển thị bảng báo cáo cho người dùng.
 
-### Trong StudentModel
-- addStudent(Student student)
-  - Thêm sinh viên vào danh sách
+### 4.3 StudentView
+- StudentView là lớp giao diện console.
+- Nó chịu trách nhiệm hiển thị menu, nhận input và in kết quả cho người dùng.
 
-- checkStudentRegistered(String id, int semester, String course)
-  - Kiểm tra sinh viên đã đăng ký khóa học trong học kỳ này chưa
+- StudentView()
+  - Hàm khởi tạo.
+  - Tạo đối tượng Validation và Constants để hỗ trợ nhập liệu và kiểm tra dữ liệu.
 
-- findNameById(String id)
-  - Tìm tên sinh viên qua ID
-
-- findAndSortStudents(String searchName)
-  - Tìm và sắp xếp theo tên
-
-- findStudentsById(String id)
-  - Tìm danh sách sinh viên theo ID
-
-- updateStudentProperties(Student student, String id, int semester, String course)
-  - Cập nhật thông tin sinh viên
-
-- updateStudentNameGlobally(String id, String newName)
-  - Cập nhật tên cho tất cả bản ghi cùng ID
-
-- deleteStudent(Student student)
-  - Xóa sinh viên khỏi danh sách
-
-- generateReports()
-  - Tạo báo cáo tổng hợp
-
-### Trong StudentView
 - displayMenuAndGetChoice()
-  - Hiển thị menu và nhận lựa chọn
+  - In menu chính ra console.
+  - Nhận lựa chọn từ người dùng.
 
 - inputStudentId()
-  - Nhập ID sinh viên
+  - Yêu cầu nhập ID sinh viên.
+  - Chuẩn hóa ID thành chữ in hoa.
 
 - inputStudentName()
-  - Nhập tên sinh viên
+  - Yêu cầu nhập tên sinh viên.
 
 - inputSemester()
-  - Nhập học kỳ
+  - Yêu cầu nhập học kỳ.
 
 - inputCourse()
-  - Nhập tên khóa học
+  - Yêu cầu nhập tên khóa học.
+  - Chỉ cho phép các khóa học hợp lệ như Java, .Net, C/C++.
 
-- displayStudentList(ArrayList<Student>)
-  - Hiển thị bảng danh sách sinh viên
+- askContinue()
+  - Hỏi người dùng có muốn tiếp tục nhập thêm sinh viên không.
 
-- displayReportList(ArrayList<Report>)
-  - Hiển thị bảng báo cáo
+- displayStudentList(ArrayList<Student> studentList)
+  - Hiển thị danh sách sinh viên theo định dạng bảng.
+
+- inputSearchName()
+  - Nhận tên cần tìm để tìm kiếm sinh viên.
+
+- inputSearchId()
+  - Nhận ID cần tìm.
+
+- inputChoiceIndex(int maxIndex)
+  - Yêu cầu người dùng chọn bản ghi khi có nhiều kết quả phù hợp.
+
+- inputUpdateOrDelete()
+  - Hỏi người dùng muốn cập nhật hay xóa.
+
+- inputOptionalId(), inputOptionalName(), inputOptionalSemester(), inputOptionalCourse()
+  - Các hàm nhập dữ liệu mới khi cập nhật.
+  - Nếu người dùng nhập trống hoặc 0 thì giữ nguyên giá trị cũ.
+
+- displayReportList(ArrayList<Report> reportList)
+  - Hiển thị danh sách báo cáo theo format bảng.
+
+- displayMessage(String message)
+  - In một dòng thông báo ra console.
+
+### 4.4 StudentModel
+- StudentModel là lớp xử lý dữ liệu và logic nghiệp vụ.
+- Nó quản lý danh sách sinh viên và thực hiện các thao tác CRUD cũng như thống kê báo cáo.
+
+- StudentModel()
+  - Khởi tạo danh sách studentList.
+
+- getStudentCount()
+  - Trả về số lượng sinh viên hiện có trong danh sách.
+
+- addStudent(Student student)
+  - Thêm một sinh viên mới vào danh sách.
+
+- checkStudentRegistered(String id, int semester, String course)
+  - Kiểm tra xem sinh viên đó đã đăng ký khóa học này trong học kỳ này chưa.
+
+- findNameById(String id)
+  - Tìm tên sinh viên bằng cách duyệt danh sách theo ID.
+
+- findAndSortStudents(String searchName)
+  - Tìm những sinh viên có tên chứa chuỗi nhập vào.
+  - Sau đó sắp xếp kết quả theo tên.
+
+- findStudentsById(String id)
+  - Tìm tất cả sinh viên có cùng ID.
+
+- updateStudentProperties(Student student, String id, int semester, String course)
+  - Cập nhật thông tin của một sinh viên.
+  - Chỉ cập nhật những trường có giá trị hợp lệ.
+
+- updateStudentNameGlobally(String id, String newName)
+  - Cập nhật tên cho tất cả các bản ghi có cùng ID.
+
+- deleteStudent(Student student)
+  - Xóa một sinh viên khỏi danh sách.
+
+- generateReports()
+  - Tạo danh sách báo cáo từ dữ liệu sinh viên.
+  - Tính số lượng đăng ký theo từng cặp tên và khóa học.
+
+### 4.5 Student
+- Student là lớp model đại diện cho một đối tượng sinh viên.
+
+- Student()
+  - Constructor rỗng, tạo đối tượng sinh viên chưa có dữ liệu.
+
+- Student(String id, int semester, String name, String courseName)
+  - Constructor có tham số, khởi tạo đầy đủ thông tin cho sinh viên.
+
+- Getter và Setter
+  - getId(), setId(), getName(), setName(), getSemester(), setSemester(), getCourseName(), setCourseName()
+  - Dùng để đọc và thay đổi thông tin của sinh viên.
+
+- compareTo(Student other)
+  - So sánh hai sinh viên theo tên.
+  - Dùng cho việc sắp xếp danh sách.
+
+- toString()
+  - Trả về chuỗi formatted để in thông tin sinh viên ra console.
+
+### 4.6 Report
+- Report là lớp dùng để lưu kết quả thống kê báo cáo.
+
+- Report(String studentName, String courseName, int totalCourse)
+  - Khởi tạo một bản ghi báo cáo.
+
+- Getter và Setter
+  - getStudentName(), setStudentName(), getCourseName(), setCourseName(), getTotalCourse(), setTotalCourse()
+  - Dùng để lấy và chỉnh sửa dữ liệu báo cáo.
+
+- toString()
+  - Trả về chuỗi biểu diễn báo cáo để hiển thị ra màn hình.
+
+### 4.7 Validation
+- Validation là lớp hỗ trợ kiểm tra và đọc dữ liệu đầu vào từ người dùng.
+
+- Validation()
+  - Khởi tạo Scanner để đọc dữ liệu từ bàn phím.
+
+- getInteger(String msg, int min, int max)
+  - Đọc một số nguyên từ người dùng.
+  - Kiểm tra giá trị có rỗng, có phải số nguyên và có nằm trong khoảng cho phép hay không.
+
+- getString(String msg, String regex, String exampleOfRegex)
+  - Đọc một chuỗi phù hợp với regex cho trước.
+  - Nếu không đúng định dạng thì yêu cầu nhập lại.
+
+- checkYN(String msg)
+  - Nhận lựa chọn Yes/No từ người dùng.
+
+- checkUD(String msg)
+  - Nhận lựa chọn Update/Delete từ người dùng.
+
+### 4.8 Constants
+- Constants là lớp lưu các hằng số cố định của chương trình.
+- Nó giúp tránh việc hardcode các giá trị lặp lại như giới hạn học kỳ, regex, tên khóa học.
 
 ## 5. Các câu hỏi Interview 1:1 giữa GV và SV
 ### Câu hỏi 1: Project này dùng kiến trúc nào?
