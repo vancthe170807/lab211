@@ -60,38 +60,40 @@ Luồng chính trong FruitController.start():
 - Là lớp điều phối trung tâm của chương trình.
 - Chịu trách nhiệm kết nối giữa View và Model.
 
-#### Các hàm chính:
-- start(): vòng lặp chính của chương trình, hiển thị menu và điều hướng lựa chọn.
-- createFruit(): xử lý việc thêm sản phẩm mới vào kho.
-- shopping(): xử lý logic mua hàng cho khách.
+#### Các hàm chính và ý nghĩa:
+- FruitController(): constructor khởi tạo 3 thành phần phụ thuộc: FruitService, FruitView và Validation.
+- start(): vòng lặp chính của chương trình, hiển thị menu, nhận lựa chọn và điều hướng tới chức năng tương ứng.
+- createFruit(): xử lý chức năng tạo sản phẩm mới, bao gồm nhập ID, tên, giá, số lượng, nguồn gốc; kiểm tra trùng ID; gọi FruitService để thêm vào kho.
+- shopping(): xử lý luồng mua hàng, kiểm tra tồn kho, hiển thị danh sách sản phẩm còn hàng, nhận số lượng mua, cập nhật đơn hàng và lưu lại khi khách xác nhận.
 
 ### 3.3 File: src/view/FruitView.java
-- Là lớp giao diện, chịu trách nhiệm in thông tin ra console.
+- Là lớp giao diện, chịu trách nhiệm in thông tin ra console và thu thập dữ liệu từ người dùng.
 
-#### Các hàm chính:
-- displayMessage(String message): in thông báo thường.
-- displayError(String message): in thông báo lỗi.
-- displayMenu(): hiển thị menu chính.
-- displayFruitList(List<Fruit> fruitList): in bảng danh sách hoa quả có thể mua.
-- displayInvoice(List<Order> orderList): in hóa đơn cho đơn hàng hiện tại.
-- displayAllOrders(Map<String, List<Order>> ordersMap): hiển thị toàn bộ đơn hàng đã lưu.
-- displaySelectedFruit(String fruitName): in thông báo sản phẩm đã chọn.
-- inputString(...): nhận chuỗi từ người dùng.
-- inputDouble(...): nhận số thực từ người dùng.
-- inputInteger(...): nhận số nguyên từ người dùng.
-- inputIntegerLimit(...): nhận số nguyên trong khoảng cho phép.
-- inputYesNo(...): nhận câu trả lời Yes/No.
+#### Các hàm chính và ý nghĩa:
+- displayMessage(String message): in thông báo thông thường lên màn hình.
+- displayError(String message): in thông báo lỗi bằng luồng stderr.
+- displayMenu(): hiển thị menu chính gồm các lựa chọn tạo hoa quả, xem đơn hàng, mua hàng và thoát.
+- displayFruitList(List<Fruit> fruitList): in bảng danh sách hoa quả còn hàng để người dùng có thể chọn mua.
+- displayInvoice(List<Order> orderList): in hóa đơn tạm thời cho đơn hàng hiện tại, bao gồm sản phẩm, số lượng, giá và tổng tiền.
+- displayAllOrders(Map<String, List<Order>> ordersMap): hiển thị toàn bộ đơn hàng đã được lưu trong hệ thống.
+- displaySelectedFruit(String fruitName): thông báo cho người dùng biết họ vừa chọn loại hoa quả nào.
+- inputString(String prompt, Validation validation): nhận chuỗi từ người dùng sau khi kiểm tra dữ liệu đầu vào.
+- inputDouble(String prompt, Validation validation): nhận số thực từ người dùng, thường dùng cho giá bán.
+- inputInteger(String prompt, Validation validation): nhận số nguyên từ người dùng, thường dùng cho số lượng.
+- inputIntegerLimit(String prompt, Validation validation, int min, int max): nhận số nguyên trong khoảng cho phép.
+- inputYesNo(String prompt, Validation validation): nhận câu trả lời Yes/No để quyết định có tiếp tục hay không.
 
 ### 3.4 File: src/view/Validation.java
 - Là lớp kiểm tra dữ liệu đầu vào.
-- Đảm bảo người dùng nhập đúng định dạng.
+- Đảm bảo người dùng nhập đúng định dạng trước khi chương trình xử lý.
 
-#### Các hàm chính:
-- checkInputIntLimit(int min, int max): kiểm tra số nguyên trong phạm vi cho phép.
-- checkInputString(): kiểm tra chuỗi không rỗng.
-- checkInputDouble(): kiểm tra số thực dương.
-- checkInputInt(): kiểm tra số nguyên không âm.
-- checkInputYN(): kiểm tra nhập Y/N.
+#### Các hàm chính và ý nghĩa:
+- Validation(): constructor khởi tạo Scanner để đọc dữ liệu từ bàn phím.
+- checkInputIntLimit(int min, int max): kiểm tra số nguyên nhập vào có nằm trong khoảng từ min đến max hay không.
+- checkInputString(): kiểm tra chuỗi nhập vào không rỗng.
+- checkInputDouble(): kiểm tra số thực nhập vào là số dương hoặc bằng 0.
+- checkInputInt(): kiểm tra số nguyên nhập vào là số không âm.
+- checkInputYN(): kiểm tra người dùng nhập đúng Y/N và trả về true/false tương ứng.
 
 ### 3.5 File: src/model/Fruit.java
 - Đại diện cho một loại hoa quả trong kho.
@@ -113,26 +115,34 @@ Luồng chính trong FruitController.start():
 ### 3.7 File: src/model/FruitService.java
 - Chứa logic nghiệp vụ liên quan đến kho hàng và đơn hàng.
 
-#### Các hàm chính:
-- getOrdersMap(): lấy danh sách đơn hàng đã lưu.
-- isFruitIdExists(String id): kiểm tra ID đã tồn tại chưa.
-- addFruit(...): thêm sản phẩm mới vào kho.
-- hasAvailableFruit(): kiểm tra có sản phẩm còn hàng không.
-- getAvailableFruitList(): lấy danh sách sản phẩm còn hàng để bán.
-- createOrderList(): tạo danh sách đơn hàng tạm thời.
-- addOrderItem(...): thêm sản phẩm vào đơn hàng và giảm tồn kho.
-- saveOrder(...): lưu đơn hàng sau khi hoàn tất.
-- updateOrderList(...): cập nhật danh sách đơn hàng hiện tại.
-- findFruitById(String id): tìm sản phẩm theo ID.
+#### Các hàm chính và ý nghĩa:
+- FruitService(): constructor khởi tạo danh sách hoa quả và bản đồ đơn hàng rỗng.
+- getOrdersMap(): lấy toàn bộ đơn hàng đã lưu trong hệ thống.
+- isFruitIdExists(String id): kiểm tra xem ID hoa quả đã tồn tại trong kho hay chưa.
+- addFruit(String id, String name, double price, int quantity, String origin): thêm một sản phẩm mới vào kho hàng.
+- hasAvailableFruit(): kiểm tra xem hiện tại có ít nhất một loại hoa quả còn hàng không.
+- getAvailableFruitList(): lấy danh sách các sản phẩm vẫn còn số lượng > 0 để bán.
+- createOrderList(): tạo danh sách đơn hàng tạm thời cho một phiên mua hàng.
+- addOrderItem(List<Order> orderList, Fruit fruit, int quantity): thêm sản phẩm vào đơn hàng hiện tại và đồng thời giảm số lượng tồn kho.
+- saveOrder(String customerName, List<Order> orderList): lưu đơn hàng sau khi khách hoàn tất giao dịch.
+- updateOrderList(List<Order> orderList, Fruit fruit, int quantity): cập nhật danh sách đơn hàng hiện tại, gom nhóm cùng loại sản phẩm nếu đã có trong đơn.
+- findFruitById(String id): tìm một loại hoa quả trong kho bằng ID.
 
 ### 3.8 File: src/model/Constants.java
 - Chứa các hằng số dùng chung cho chương trình.
-- Bao gồm:
+- Không phải lớp xử lý logic mà chủ yếu lưu trữ:
   - thông báo menu,
   - thông báo lỗi,
   - câu nhắc nhập dữ liệu,
   - định dạng bảng,
   - thông báo hết hàng, thêm thành công, lưu đơn thành công.
+
+### 3.9 File: src/manager/Main.java
+- Là lớp khởi động của chương trình.
+- Chứa phương thức main để chạy ứng dụng.
+
+#### Các hàm chính và ý nghĩa:
+- main(String[] args): điểm bắt đầu của chương trình, tạo đối tượng FruitController và gọi start() để kích hoạt vòng lặp chính.
 
 ## 4. Tóm tắt ngắn gọn
 
