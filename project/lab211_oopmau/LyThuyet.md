@@ -20,10 +20,10 @@ Nó định nghĩa **các thuộc tính (variables)** và **hành vi (methods)**
 
 ```java
 public class Car {
-    String color;
-    int speed;
+    private String color;
+    private int speed;
 
-    void run() {
+    public void run() {
         System.out.println("Xe đang chạy ở tốc độ " + speed + " km/h");
     }
 }
@@ -214,22 +214,24 @@ class Dog extends Animal {
 
 ---
 
-## 🏗️ 7. Static Members
+## 🏗️ 7. Static vs Instance (Non-static) Members
 
-`static` cho phép **chia sẻ biến hoặc phương thức** giữa tất cả các đối tượng của lớp.
+Từ khóa `static` dùng để quản lý bộ nhớ và định nghĩa các thành viên thuộc về cấp độ **Lớp (Class)** thay vì cấp độ **Đối tượng (Instance)**.
 
-```java
-class Student {
-    static String school = "ĐH CNTT";
-    String name;
+### 📌 Phân biệt Static và Instance (Non-static)
+| Đặc điểm | Static Members | Instance Members (Non-static) |
+| :--- | :--- | :--- |
+| **Bản chất** | Thuộc về **Lớp (Class)**, dùng chung bởi tất cả đối tượng. | Thuộc về từng **Đối tượng (Instance)** cụ thể. |
+| **Cấp phát bộ nhớ** | Load một lần duy nhất vào vùng nhớ **Metaspace** khi class được load. | Cấp phát mới trên vùng nhớ **Heap** mỗi khi gọi `new`. |
+| **Cách truy cập** | Gọi trực tiếp qua tên Lớp: `ClassName.member`. | Gọi qua đối tượng cụ thể: `objectName.member`. |
+| **Mối quan hệ** | **Không thể** truy cập trực tiếp các Instance variables/methods. | **Có thể** truy cập cả Static lẫn Instance members. |
 
-    Student(String name) { this.name = name; }
-
-    void showInfo() {
-        System.out.println(name + " học tại " + school);
-    }
-}
-```
+### ⚠️ Lưu ý chí mạng trong OOP: Không lạm dụng `public static` cho hàm (trừ `main`)
+Trong lập trình hướng đối tượng, **tránh việc khai báo các hàm nghiệp vụ là `public static`** (ngoại trừ phương thức khởi chạy `main` và các hàm tiện ích thuần túy không trạng thái như `Math.sin`).
+* **Lý do**: 
+  1. **Phá vỡ tính đa hình (Polymorphism)**: Phương thức `static` liên kết tĩnh (static binding) lúc compile-time nên **không thể bị ghi đè (override)** bởi lớp con.
+  2. **Vi phạm Đóng gói (Encapsulation)**: Hàm `static` không liên kết với trạng thái của đối tượng cụ thể nào, biến chương trình hướng đối tượng thành lập trình hướng thủ tục (Procedural Programming) với các hàm toàn cục.
+  3. **Khó kiểm thử (Unit Testing)**: Các hàm static rất khó viết mã Mock khi thực hiện kiểm thử.
 
 ---
 
@@ -262,25 +264,37 @@ class Outer {
 
 ## 🧱 10. Access Modifiers (Phạm vi truy cập)
 
-| Modifier                 | Phạm vi                   | Mô tả                        |
-| ------------------------ | ------------------------- | ---------------------------- |
-| `public`                 | Toàn bộ chương trình      | Có thể truy cập ở mọi nơi    |
-| `protected`              | Cùng package hoặc lớp con | Hạn chế hơn `public`         |
-| `default` (không ghi gì) | Cùng package              | Không truy cập ngoài package |
-| `private`                | Chỉ trong cùng class      | Bảo mật cao nhất             |
+Access Modifiers định nghĩa khả năng hiển thị và mức độ bảo mật dữ liệu của các lớp, thuộc tính, và phương thức trong ứng dụng.
+
+### 📌 Bảng so sánh chi tiết phạm vi truy cập
+| Modifier | Trong cùng Lớp (Class) | Cùng Package | Lớp con (Subclass) khác Package | Khác Package (Mọi nơi) |
+| :--- | :---: | :---: | :---: | :---: |
+| `private` | ✅ | ❌ | ❌ | ❌ |
+| `default` (không ghi gì) | ✅ | ✅ | ❌ | ❌ |
+| `protected` | ✅ | ✅ | ✅ | ❌ |
+| `public` | ✅ | ✅ | ✅ | ✅ |
+
+* **`private`**: Mức độ bảo mật cao nhất. Thường áp dụng cho tất cả các thuộc tính của lớp để bảo vệ trạng thái nội bộ.
+* **`default`**: Cho phép truy cập nội bộ trong cùng một thư mục/package.
+* **`protected`**: Dành cho mối quan hệ kế thừa. Lớp con ở package khác vẫn có quyền truy cập.
+* **`public`**: Mức độ công khai cao nhất, truy cập ở bất kỳ đâu trong dự án.
 
 ---
 
-## 💡 11. Final Keyword
+## 💡 11. Final vs Non-Final Keyword
 
-* `final class` → không thể kế thừa
-* `final method` → không thể override
-* `final variable` → hằng số (không thể thay đổi giá trị)
+Từ khóa `final` trong Java biểu diễn tính chất **bất biến (không thể thay đổi)** của phần tử được áp dụng.
 
-```java
-final class A {}
-final int MAX = 100;
-```
+### 📌 Phân biệt Final và Non-Final (Bình thường)
+* **Đối với Biến (Variables)**:
+  * `final variable`: Trở thành hằng số (Constant), chỉ được gán giá trị một lần duy nhất và không thể thay đổi trong suốt runtime.
+  * `non-final variable`: Biến bình thường, giá trị có thể thay đổi liên tục bằng phép gán.
+* **Đối với Phương thức (Methods)**:
+  * `final method`: Ngăn chặn hoàn toàn việc lớp con ghi đè (`@Override`) phương thức đó.
+  * `non-final method`: Lớp con có thể tự do override để thay đổi hành vi nghiệp vụ.
+* **Đối với Lớp (Classes)**:
+  * `final class`: Lớp bị đóng băng, không cho phép bất kỳ lớp nào khác kế thừa (`extends`) từ nó.
+  * `non-final class`: Lớp bình thường, có thể kế thừa và mở rộng tính năng.
 
 ---
 
@@ -303,17 +317,58 @@ Không cần `delete` như C++.
 
 ---
 
-## ⚙️ 14. OOP Best Practices
+## 📦 14. Java Data Types (Các kiểu dữ liệu trong Java)
 
-✅ Dùng **Encapsulation** để bảo vệ dữ liệu
-✅ Dùng **Inheritance** hợp lý, không lạm dụng
-✅ Áp dụng **Interface/Abstract Class** để tách biệt logic
-✅ **Đặt tên class và method rõ ràng**
-✅ Viết code **hướng đối tượng, không hướng thủ tục**
+Java chia các kiểu dữ liệu thành hai nhóm chính: **Kiểu dữ liệu nguyên thủy (Primitive Types)** và **Kiểu dữ liệu tham chiếu (Reference Types)**. Việc chọn đúng kiểu dữ liệu giúp tối ưu bộ nhớ và tránh lỗi logic.
+
+### 📌 14.1 Kiểu dữ liệu nguyên thủy (Primitive Types)
+Lưu trực tiếp giá trị vào bộ nhớ Stack, hiệu năng cao.
+
+* **`int` (Integer)**: Kiểu số nguyên 32-bit (Phạm vi khoảng $\pm 2$ tỷ).
+  * *Khái niệm*: Kiểu dữ liệu biểu diễn số nguyên không có phần thập phân.
+  * *Khi nào dùng*: Sử dụng cho các số đếm, số lượng phần tử, chỉ số vòng lặp, tuổi tác, hoặc mã ID dạng số thông thường.
+* **`double`**: Kiểu số thực 64-bit (Độ chính xác kép).
+  * *Khái niệm*: Kiểu dữ liệu số thực có phần thập phân.
+  * *Khi nào dùng*: Điểm số học tập, chiều cao, cân nặng, tọa độ, tỷ lệ phần trăm.
+  * *Lưu ý*: Tránh dùng `double` cho các phép tính tài chính/tiền tệ đòi hỏi độ chính xác tuyệt đối do sai số dấu phẩy động; thay vào đó hãy dùng `BigDecimal`.
+* **`boolean`**: Kiểu logic chỉ nhận `true` (đúng) hoặc `false` (sai).
+  * *Khái niệm*: Biểu diễn trạng thái nhị phân.
+  * *Khi nào dùng*: Lưu trạng thái hệ thống (ví dụ: `isDeleted`, `isActive`), các cờ kiểm tra (flag), hoặc kết quả của biểu thức điều kiện.
+* **`char`**: Kiểu ký tự đơn 16-bit.
+  * *Khái niệm*: Lưu trữ một ký tự Unicode duy nhất.
+  * *Khi nào dùng*: Lưu trữ các ký tự lựa chọn đơn (như `'Y'` hoặc `'N'`), phím tắt, hoặc ký hiệu viết tắt.
+* *Các kiểu khác*:
+  * **`long`**: Dùng khi số nguyên vượt quá phạm vi của `int` (như thời gian epoch miliseconds, ID cơ sở dữ liệu lớn).
+  * **`float`**: Số thực đơn 32-bit, ít dùng hơn `double` trừ khi cần tiết kiệm bộ nhớ trong các mảng số thực cực lớn.
+
+### 📌 14.2 Kiểu dữ liệu tham chiếu (Reference Types)
+Lưu địa chỉ tham chiếu trỏ đến vùng nhớ Heap nơi đối tượng thực tế được tạo.
+
+* **`String`**: Chuỗi ký tự (là đối tượng bất biến - Immutable).
+  * *Khái niệm*: Đối tượng biểu diễn một chuỗi gồm nhiều ký tự.
+  * *Khi nào dùng*: Tên người, địa chỉ, email, đoạn văn bản, hoặc các ID có chứa chữ cái.
+* **`enum` (Enumeration)**: Kiểu dữ liệu đại diện cho một tập hợp các hằng số cố định.
+  * *Khái niệm*: Một class đặc biệt định nghĩa một danh sách các lựa chọn được định danh trước.
+  * *Khi nào dùng*: Khi dữ liệu chỉ được phép nhận một trong số các giá trị cố định và biết trước (ví dụ: Giới tính `MALE`/`FEMALE`, Trạng thái học tập `ACTIVE`/`INACTIVE`, Các ngày trong tuần, Các hướng `NORTH`/`SOUTH`/`EAST`/`WEST`). Sử dụng `enum` thay vì String hoặc số nguyên giúp đảm bảo an toàn kiểu dữ liệu (Type Safety) lúc compile-time.
+* **`List` / `ArrayList`**: Tập hợp dữ liệu tuyến tính động.
+  * *Khái niệm*: Cấu trúc dữ liệu danh sách có kích thước co giãn động.
+  * *Khi nào dùng*: Quản lý danh sách đối tượng (như danh sách học sinh, danh sách đơn hàng) khi chưa biết trước số lượng phần tử tối đa hoặc cần thêm/xóa phần tử thường xuyên.
 
 ---
 
-## 🎓 15. Tổng kết sơ đồ tư duy OOP Java
+## ⚙️ 15. OOP Best Practices
+
+- Dùng **Encapsulation** để bảo vệ dữ liệu
+
+- Dùng **Inheritance** hợp lý, không lạm dụng
+
+- Áp dụng **Interface/Abstract Class** để tách biệt logic
+- **Đặt tên class và method rõ ràng**
+- Viết code **hướng đối tượng, không hướng thủ tục**
+
+---
+
+## 🎓 16. Tổng kết sơ đồ tư duy OOP Java
 
 ```
 OOP Java
@@ -329,6 +384,7 @@ OOP Java
 ├── Constructor / this / super
 ├── Access Modifiers
 ├── Static / Final
+├── Data Types (int, double, String, enum...)
 └── Interface & Abstract Class
 ```
 
