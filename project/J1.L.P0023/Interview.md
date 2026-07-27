@@ -144,51 +144,53 @@ Luồng chính trong FruitController.start():
 #### Các hàm chính và ý nghĩa:
 - main(String[] args): điểm bắt đầu của chương trình, tạo đối tượng FruitController và gọi start() để kích hoạt vòng lặp chính.
 
-## 4. Tóm tắt ngắn gọn
+## 4. Các câu hỏi Interview OOP & Trả lời (Strict Lab Defense)
 
-Chương trình là một ứng dụng console quản lý cửa hàng hoa quả đơn giản. Người dùng có thể thêm sản phẩm, mua hàng và xem đơn hàng. Mỗi lớp có trách nhiệm riêng:
-- Controller điều phối.
-- View hiện thị.
-- Model xử lý dữ liệu và logic.
+### 4.1 Fruit.java & Order.java (Encapsulation & Data Modeling)
+1. **Câu hỏi 1**: Tại sao tất cả các thuộc tính (`fruitId`, `fruitName`, `price`, `quantity`, `origin`) trong lớp `Fruit` đều là `private`? Tại sao không dùng `public` hay `protected`?
+   * **Trả lời**: Khai báo `private` để thực thi tính ẩn giấu dữ liệu (data hiding) và đóng gói (Encapsulation), bảo vệ trạng thái của đối tượng khỏi các sửa đổi ngoài ý muốn từ bên ngoài. Nếu dùng `public`, bất kì lớp nào cũng có thể gán lại giá trị trực tiếp. Còn `protected` sẽ mở quyền truy cập cho tất cả các lớp trong cùng package `model` và lớp con bên ngoài, làm suy giảm tính đóng gói.
+2. **Câu hỏi 2**: Nếu tôi đổi từ `private` sang `protected`, những lớp nào bên ngoài package `model` có thể truy cập trực tiếp các thuộc tính này? Tại sao không làm như vậy?
+   * **Trả lời**: Chỉ có các lớp con (subclasses) kế thừa từ lớp `Fruit` nhưng nằm ở package ngoài mới có quyền truy cập trực tiếp. Ta không làm vậy vì muốn đảm bảo mọi truy cập đến thuộc tính đều phải đi qua các hàm getter/setter công khai. Điều này giúp kiểm soát giá trị gán vào luôn hợp lệ (ví dụ: số lượng tồn kho `quantity` không được phép âm).
+3. **Câu hỏi 3**: Tại sao lớp `Order` không chứa `fruitId` mà chỉ có `fruitName`? Thiết kế này có thể dẫn đến hậu quả gì nếu có nhiều loại quả khác nhau nhưng trùng tên (ví dụ: Táo Mỹ giá $5 và Táo Úc giá $3)?
+   * **Trả lời**: Việc thiếu trường định danh duy nhất `fruitId` trong lớp `Order` là một lỗi thiết kế mô hình dữ liệu. Hậu quả là khi khách hàng chọn mua hai loại trái cây khác nhau nhưng trùng tên (như Táo Mỹ giá $5 và Táo Úc giá $3), hệ thống so sánh theo tên sẽ nhận diện chúng là một sản phẩm, dẫn đến cộng dồn số lượng sai lệch và tính toán sai tiền thanh toán của hóa đơn.
+4. **Câu hỏi 4**: Tại sao hàm `getAmount()` trong `Order` lại tính toán động `price * quantity` thay vì lưu vào một thuộc tính `amount` riêng biệt và dùng setter? Nguyên tắc "Single Source of Truth" được áp dụng thế nào ở đây?
+   * **Trả lời**: Để đảm bảo tính nhất quán dữ liệu (Data Consistency). `amount` (thành tiền) luôn là giá trị phái sinh từ `price` và `quantity`. Nếu tạo một thuộc tính và dùng setter, ta có nguy cơ cập nhật số lượng hoặc giá mà quên cập nhật thành tiền, dẫn đến mâu thuẫn dữ liệu. Tính toán động giúp lấy dữ liệu từ nguồn gốc duy nhất (Single Source of Truth) là `price` và `quantity`.
+5. **Câu hỏi 5**: Tại sao lớp `Fruit` không kế thừa từ lớp `Order` hoặc ngược lại? Mối quan hệ "is-a" và "has-a" ở đây được định nghĩa như thế nào?
+   * **Trả lời**: Vì giữa `Fruit` and `Order` không có quan hệ kế thừa "is-a" (Trái cây không phải là một dạng của Đơn hàng, và ngược lại). Chúng có quan hệ "has-a" (Đơn hàng chứa/sử dụng thông tin của Trái cây). Kế thừa sai mục đích sẽ vi phạm nguyên lý Liskov Substitution Principle (LSP) trong SOLID.
 
-## 5. Câu hỏi và trả lời theo dạng interview 1:1
+### 4.2 FruitService.java & Data Operations
+6. **Câu hỏi 6**: Tại sao các trường dữ liệu `fruitList` và `ordersMap` trong `FruitService` lại được khai báo là `final`? Từ khóa `final` ở đây bảo vệ cái gì, và nó không bảo vệ cái gì?
+   * **Trả lời**: Từ khóa `final` bảo vệ tham chiếu (reference) của biến `fruitList` và `ordersMap` không bị trỏ sang một đối tượng danh sách hoặc bản đồ khác. Tuy nhiên, nó KHÔNG bảo vệ dữ liệu bên trong tập hợp; ta vẫn có thể gọi các phương thức sửa đổi dữ liệu bên trong như `add()`, `remove()`, `clear()` hoặc gán đè phần tử bình thường.
+7. **Câu hỏi 7**: Tại sao `ordersMap` lại dùng kiểu `Map<String, List<Order>>` với key là `customerName` (String)? Chuyện gì xảy ra nếu hai khách hàng khác nhau cùng tên là "An" mua hàng? Làm cách nào để sửa thiết kế này mà không làm hỏng tính đóng gói?
+   * **Trả lời**: Dùng `customerName` (String) làm key của Map sẽ gây lỗi ghi đè hoặc gộp chung hóa đơn của các khách hàng có cùng tên `"An"`. Để sửa, cần dùng một thực thể `Customer` có trường `id` hoặc số điện thoại độc nhất để làm key của Map thay vì dùng String tên đơn giản.
+8. **Câu hỏi 8**: Trong hàm `updateOrderList` của `FruitService`, tại sao bạn lại so sánh tên quả bằng `order.getFruitName().equals(fruit.getFruitName())`? Tại sao không so sánh bằng `fruitId`?
+   * **Trả lời**: Do lớp `Order` không lưu trữ thuộc tính `fruitId` để định danh sản phẩm trong giỏ hàng. Đây là hạn chế lớn trong thiết kế, lẽ ra lớp `Order` phải chứa `fruitId` để so sánh và phân biệt chính xác các sản phẩm khi giỏ hàng được cập nhật.
+9. **Câu hỏi 9**: Tại sao các phương thức trong `FruitService` không nhận trực tiếp đối tượng `Scanner` để nhập liệu mà phải nhận các tham số nguyên thủy hoặc đối tượng đã được chuẩn hóa? Điều này liên quan gì đến nguyên tắc Single Responsibility Principle (SRP)?
+   * **Trả lời**: Giúp tách biệt logic xử lý nghiệp vụ với giao diện nhập liệu của người dùng. `FruitService` chỉ có nhiệm vụ tính toán, thêm bớt dữ liệu kho chứ không quan tâm dữ liệu đến từ console hay tệp tin. Nếu nhận trực tiếp `Scanner`, Service sẽ bị liên kết cứng với giao diện console, vi phạm SRP.
+10. **Câu hỏi 10**: Tại sao phương thức `getAvailableFruitList()` lại trả về một `ArrayList` mới thay vì trả về trực tiếp reference của `fruitList`? Việc trả về direct reference của một private collection sẽ gây ra lỗ hổng bảo mật nào trong OOP (Representation Exposure)?
+    * **Trả lời**: Trả về danh sách mới để ngăn chặn lỗ hổng rò rỉ chi tiết cài đặt (Representation Exposure). Nếu trả về trực tiếp reference của `fruitList`, các lớp bên ngoài có thể gọi `clear()` hoặc `remove()` trực tiếp trên danh sách này để sửa đổi kho hàng mà không đi qua các phương thức nghiệp vụ của `FruitService`, phá vỡ tính đóng gói dữ liệu của Service.
 
-### Giảng viên: Chương trình này được xây dựng theo mô hình nào?
-Sinh viên: Chương trình được xây dựng theo mô hình MVC, gồm ba thành phần là Model, View và Controller.
+### 4.3 Constants.java & Utility Classes
+11. **Câu hỏi 11**: Tại sao các hằng số ở đây lại là `public static final`?
+    * **Trả lời**: `public` để mọi lớp khác đều có thể sử dụng. `static` để biến thuộc về cấp độ Class, nạp duy nhất một lần vào Metaspace nhằm tiết kiệm bộ nhớ Heap. `final` để biến chúng thành hằng số chỉ đọc, ngăn chặn việc gán lại giá trị trong suốt quá trình ứng dụng thực thi.
+12. **Câu hỏi 12**: Tại sao lớp `Constants` lại có một constructor `private Constants()` rỗng và không làm gì cả? Chuyện gì xảy ra nếu tôi cố tình viết `new Constants()` ở các lớp khác?
+    * **Trả lời**: Constructor `private` để ngăn chặn việc khởi tạo thực thể (instantiation) của lớp `Constants`. Lớp này chỉ chứa các hằng số tĩnh nên việc tạo đối tượng của nó là dư thừa và gây lãng phí bộ nhớ Heap. Nếu cố tình viết `new Constants()` ở lớp khác, trình biên dịch sẽ báo lỗi cú pháp ngay lập tức.
+13. **Câu hỏi 13**: So sánh class `Constants` này với class `Constants` trong project `J1.L.P0021` (không dùng static). Hãy chỉ ra sự khác biệt về cách cấp phát bộ nhớ và hiệu năng giữa hai thiết kế này.
+    * **Trả lời**: Trong P0023, vì dùng `public static final` nên các hằng số được lưu trữ một lần duy nhất tại vùng nhớ Metaspace khi nạp lớp, các đối tượng dùng chung một vùng nhớ. Trong P0021, do thiếu từ khóa `static`, các hằng số là biến thực thể; mỗi lần gọi `new StudentView()` hay `new StudentController()`, Java phải cấp phát vùng nhớ Heap để sao chép lại toàn bộ các hằng số đó, làm lãng phí Heap và làm giảm hiệu năng hệ thống do Garbage Collector phải dọn dẹp các đối tượng rác liên tục.
+14. **Câu hỏi 14**: Tại sao không chuyển `Constants` thành một `interface` và implements nó ở các lớp khác để sử dụng trực tiếp các hằng số? Giải thích tại sao hành động đó lại bị coi là một thiết kế tồi.
+    * **Trả lời**: Đây là Constant Interface Pattern, một lỗi thiết kế (Anti-pattern). Interface dùng để định nghĩa hành vi và cam kết triển khai API công khai của lớp con. Việc implements interface chỉ để sử dụng các hằng số tĩnh sẽ làm rò rỉ chi tiết triển khai nội bộ ra ngoài, gây khó khăn cho việc bảo trì và vi phạm các nguyên tắc thiết kế OOP.
+15. **Câu hỏi 15**: Tại sao bạn lại khai báo hằng số `YES = "Y"` và `NO = "N"`? Tại sao không dùng trực tiếp kiểu dữ liệu `boolean` hoặc một `enum` chuyên biệt cho các lựa chọn này?
+    * **Trả lời**: Dùng String `"Y"`/`"N"` làm tăng nguy cơ sai kiểu dữ liệu (lack of type safety) và dễ gõ sai chuỗi gây lỗi runtime. Lẽ ra nên dùng kiểu `boolean` (đúng/sai) hoặc cấu trúc `enum` để kiểm soát kiểu chặt chẽ từ thời điểm biên dịch (Compile-time Type Safety).
 
-### Giảng viên: Vai trò của Main.java là gì?
-Sinh viên: Main.java là điểm khởi đầu của chương trình. Nó tạo đối tượng FruitController và gọi phương thức start() để bắt đầu chạy chương trình.
+### 4.4 FruitController.java & FruitView.java (Architecture & Control Flow)
+16. **Câu hỏi 16**: Tại sao `FruitController` lại nhận các đối tượng `FruitService`, `FruitView` và `Validation` qua constructor (Dependency Injection)? Tại sao không dùng từ khóa `new` để tự khởi tạo chúng ngay bên trong controller?
+    * **Trả lời**: Nhận thông qua constructor giúp giảm liên kết cứng (Loose Coupling). Điều này giúp `FruitController` trở nên linh hoạt hơn vì ta có thể dễ dàng truyền các lớp cài đặt khác nhau hoặc truyền đối tượng Mock khi viết các kiểm thử đơn vị (Unit Tests) mà không cần chỉnh sửa code của Controller.
+17. **Câu hỏi 17**: Khi người dùng chọn mua hàng, làm sao để Controller đảm bảo rằng số lượng người dùng nhập không vượt quá số lượng tồn kho của loại hoa quả đó trong Model? Logic kiểm tra này thuộc về Model, View, hay Controller? Tại sao?
+    * **Trả lời**: Logic kiểm tra số lượng phải nằm ở Model (trong `FruitService` hoặc đối tượng `Fruit`), vì Model chịu trách nhiệm quản lý dữ liệu và thực thi các quy tắc nghiệp vụ. Controller chỉ làm nhiệm vụ điều hướng: nhận số lượng từ View, gửi yêu cầu tới Model để kiểm tra xem có đủ hàng không, nhận kết quả và điều khiển View hiển thị lỗi nếu không đủ.
+18. **Câu hỏi 18**: Tại sao `FruitView` không giữ một tham chiếu nào đến `FruitService`? Nếu View tự gọi Service để lấy dữ liệu in ra màn hình mà bỏ qua Controller thì chuyện gì sẽ xảy ra?
+    * **Trả lời**: Nhằm duy trì tính Separation of Concerns (phân tách trách nhiệm). Nếu View tự gọi Service, View sẽ phụ thuộc trực tiếp vào nghiệp vụ của Model. Khi logic lưu trữ hoặc xử lý dữ liệu thay đổi, ta phải sửa lại cả code View, làm giảm tính độc lập và khả năng tái sử dụng của View.
+19. **Câu hỏi 19**: Tại sao phương thức `displayError(String message)` trong `FruitView` lại dùng `System.err.println` thay vì `System.out.println`? Sự khác biệt về mặt luồng xuất dữ liệu (Output Stream) ở đây là gì?
+    * **Trả lời**: `System.err` hướng đầu ra tới Standard Error Stream (luồng lỗi tiêu chuẩn), trong khi `System.out` hướng tới Standard Output Stream (luồng xuất tiêu chuẩn). Việc này giúp tách biệt lỗi khỏi đầu ra thông thường của chương trình, cho phép hệ thống chuyển hướng ghi log lỗi ra một tệp tin riêng để theo dõi và xử lý.
+20. **Câu hỏi 20**: Nếu yêu cầu thay đổi cấu trúc lưu trữ đơn hàng từ `Map` sang một File hoặc Cơ sở dữ liệu (Database), những lớp nào sẽ phải thay đổi code và lớp nào hoàn toàn không bị ảnh hưởng? Kiến trúc hiện tại đã đạt được tính độc lập dữ liệu chưa?
+    * **Trả lời**: Chỉ có lớp `FruitService` (hoặc lớp Repository chịu trách nhiệm truy xuất dữ liệu) là phải thay đổi mã nguồn. Các lớp `FruitView` và `FruitController` hoàn toàn không bị ảnh hưởng do chúng giao tiếp qua các phương thức trừu tượng của Service. Thiết kế đã đạt được tính độc lập dữ liệu rất cao.
 
-### Giảng viên: FruitController làm nhiệm vụ gì?
-Sinh viên: FruitController là lớp điều phối trung tâm. Nó nhận lựa chọn từ người dùng, gọi đúng chức năng tương ứng và kết nối giữa View và Model.
-
-### Giảng viên: Luồng chạy chính của chương trình bắt đầu như thế nào?
-Sinh viên: Khi chương trình chạy, hệ thống hiển thị menu. Người dùng chọn chức năng, sau đó controller sẽ điều hướng tới chức năng phù hợp như tạo sản phẩm, xem đơn hàng hoặc mua hàng.
-
-### Giảng viên: Khi người dùng chọn chức năng tạo sản phẩm, chương trình xử lý thế nào?
-Sinh viên: Hệ thống sẽ yêu cầu nhập ID, tên, giá, số lượng và nguồn gốc. Nếu ID đã tồn tại thì báo lỗi, còn nếu hợp lệ thì thêm vào danh sách sản phẩm.
-
-### Giảng viên: Khi người dùng chọn mua hàng, chương trình làm gì?
-Sinh viên: Trước tiên chương trình kiểm tra xem có sản phẩm còn hàng hay không. Nếu không còn thì báo out of stock. Nếu còn thì hiển thị danh sách sản phẩm và cho người dùng chọn.
-
-### Giảng viên: Số lượng hàng bị giảm như thế nào?
-Sinh viên: Khi người dùng xác nhận mua một số lượng nhất định, FruitService sẽ cập nhật lại số lượng tồn kho bằng cách trừ đi số lượng đã mua.
-
-### Giảng viên: Đơn hàng được lưu ở đâu?
-Sinh viên: Đơn hàng được lưu trong cấu trúc dữ liệu của FruitService, cụ thể là map ordersMap, nơi mỗi khách hàng có thể có một danh sách đơn hàng.
-
-### Giảng viên: Tại sao cần tách View và Controller riêng?
-Sinh viên: Vì View chỉ chịu trách nhiệm hiển thị, còn Controller chịu trách nhiệm điều phối logic. Việc tách riêng giúp code dễ đọc, dễ sửa và dễ bảo trì hơn.
-
-### Giảng viên: Vai trò của Validation là gì?
-Sinh viên: Validation dùng để kiểm tra đầu vào của người dùng, đảm bảo dữ liệu nhập vào hợp lệ trước khi xử lý.
-
-### Giảng viên: Constants có ý nghĩa gì?
-Sinh viên: Constants chứa các hằng số dùng chung như thông báo, prompt nhập liệu và định dạng bảng, giúp chương trình thống nhất và dễ quản lý.
-
-## 6. Ý nghĩa của việc phân chia lớp
-
-Việc phân tách này giúp chương trình dễ hiểu, dễ bảo trì và mở rộng hơn:
-- Nếu muốn đổi giao diện, chỉ sửa View.
-- Nếu muốn thay đổi logic kho hàng, chỉ sửa FruitService.
-- Nếu muốn đổi luồng chương trình, chỉ sửa FruitController.

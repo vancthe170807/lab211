@@ -250,63 +250,53 @@ Project này là một chương trình Java quản lý sinh viên bằng console
 - Constants là lớp lưu các hằng số cố định của chương trình.
 - Nó giúp tránh việc hardcode các giá trị lặp lại như giới hạn học kỳ, regex, tên khóa học.
 
-## 5. Các câu hỏi Interview 1:1 giữa GV và SV
-### Câu hỏi 1: Project này dùng kiến trúc nào?
-Trả lời mẫu:
-- Project sử dụng kiến trúc MVC cơ bản: Model, View, Controller.
-- Model xử lý dữ liệu, View hiển thị giao diện console, Controller điều hướng luồng.
+## 5. Các câu hỏi Interview OOP & Trả lời (Strict Lab Defense)
 
-### Câu hỏi 2: Vai trò của Controller là gì?
-Trả lời mẫu:
-- Controller nhận input từ View, gọi Model để xử lý, rồi trả kết quả về View để hiển thị.
+### 5.1 Student.java & OOP Fundamentals
+1. **Câu hỏi 1**: Tại sao tất cả các thuộc tính (`id`, `name`, `semester`, `courseName`) trong lớp Student lại được khai báo là `private` mà không phải `public` hay `protected`? Đóng gói (Encapsulation) sẽ bị phá vỡ thế nào nếu dùng `public`?
+   * **Trả lời**: Khai báo `private` để áp dụng nguyên lý đóng gói (Encapsulation), bảo vệ trạng thái nội bộ của đối tượng không bị truy cập và sửa đổi tự do từ bên ngoài. Nếu dùng `public`, bất cứ lớp nào cũng có thể thay đổi trực tiếp giá trị của các thuộc tính (ví dụ: `student.semester = -99`), làm mất tính toàn vẹn và mất đi quyền kiểm soát dữ liệu hợp lệ của lớp.
+2. **Câu hỏi 2**: Tại sao lớp Student lại cần cả constructor không tham số lẫn constructor có tham số? Chuyện gì xảy ra nếu tôi xóa constructor không tham số đi? Dòng code nào trong dự án sẽ bị lỗi biên dịch?
+   * **Trả lời**: Constructor có tham số giúp khởi tạo nhanh đối tượng cùng với dữ liệu cụ thể. Constructor không tham số được viết để cho phép khởi tạo đối tượng trống và gán giá trị sau bằng setter (rất cần thiết khi làm việc với một số thư viện ánh xạ hoặc framework dữ liệu). Nếu xóa constructor không tham số, Java sẽ không tự động tạo constructor mặc định nữa. Khi đó, bất cứ dòng code nào gọi `new Student()` (không truyền đối số) sẽ bị lỗi biên dịch.
+3. **Câu hỏi 3**: Tại sao phương thức `compareTo` và `toString` lại có annotation `@Override`? Nếu xóa annotation này đi thì code có biên dịch được không? Tại sao?
+   * **Trả lời**: `@Override` báo hiệu cho trình biên dịch (Compiler) kiểm tra xem phương thức đó có thực sự ghi đè phương thức của lớp cha hoặc interface hay không. Nếu xóa `@Override`, code vẫn biên dịch được với điều kiện ta viết đúng chính xác chữ ký phương thức (signature). Tuy nhiên, nếu viết sai chính tả chữ ký phương thức (ví dụ: viết nhầm thành `toSting()`), compiler sẽ coi đó là phương thức mới hoàn toàn của lớp `Student` thay vì báo lỗi viết sai cú pháp ghi đè, dẫn đến lỗi logic nghiêm trọng khi chạy chương trình.
+4. **Câu hỏi 4**: Tại sao lớp Student lại implements Comparable thay vì dùng Comparator? Sự khác nhau cốt lõi giữa hai interface này là gì?
+   * **Trả lời**: Dùng `Comparable` để định nghĩa tiêu chí so sánh tự nhiên (Natural Ordering) mặc định, duy nhất được cài đặt trực tiếp bên trong lớp `Student` (thông qua `compareTo`). Còn `Comparator` đại diện cho các bộ so sánh tùy biến bên ngoài lớp (thông qua `compare`), thường dùng khi cần nhiều tiêu chí sắp xếp khác nhau (ví dụ: lúc xếp theo tên, lúc xếp theo học kỳ). Bài toán chỉ yêu cầu sắp xếp theo tên mặc định nên cài đặt `Comparable` là đủ.
+5. **Câu hỏi 5**: Trong phương thức `compareTo`, chuyện gì xảy ra nếu trường `name` của một trong hai đối tượng bị `null`? Bạn xử lý ngoại lệ này như thế nào?
+   * **Trả lời**: Nếu `name` bị `null`, lời gọi hàm `this.getName().compareTo(other.getName())` sẽ ngay lập tức ném ra ngoại lệ `NullPointerException`. Để xử lý an toàn, cần kiểm tra `null` trước khi thực hiện so sánh, ví dụ: quy ước đối tượng có `name` là `null` sẽ được xếp trước hoặc xếp sau (trả về `-1` hoặc `1`).
 
-### Câu hỏi 3: Vai trò của Model là gì?
-Trả lời mẫu:
-- Model chịu trách nhiệm về dữ liệu và logic nghiệp vụ như thêm, sửa, xóa, tìm kiếm, tạo báo cáo.
+### 5.2 StudentModel.java & Data Structures
+6. **Câu hỏi 6**: Tại sao thuộc tính `studentList` trong lớp StudentModel lại được khai báo với kiểu cụ thể là `ArrayList<Student>` thay vì kiểu Interface `List<Student>`? Thiết kế này có vi phạm nguyên tắc "Program to an interface, not an implementation" không?
+   * **Trả lời**: Thiết kế này vi phạm nguyên tắc. Việc khai báo kiểu cụ thể `ArrayList` làm tăng sự phụ thuộc chặt chẽ (tight coupling) vào cấu trúc dữ liệu. Lẽ ra nên khai báo `private List<Student> studentList` để có thể dễ dàng thay đổi kiểu cài đặt bên dưới (ví dụ sang `LinkedList` hoặc `CopyOnWriteArrayList` cho đa luồng) mà không phải thay đổi các dòng code khai báo thuộc tính.
+7. **Câu hỏi 7**: Trong hàm `updateStudentNameGlobally` của StudentModel, tại sao bạn phải duyệt qua toàn bộ danh sách để đổi tên cho tất cả sinh viên cùng ID? Thiết kế cơ sở dữ liệu/đối tượng ở đây bị lỗi gì dẫn đến việc dữ liệu bị phân mảnh như vậy?
+   * **Trả lời**: Thiết kế bị lỗi dư thừa dữ liệu (Data Redundancy) và vi phạm nguyên tắc chuẩn hóa dữ liệu. Do cấu trúc thiết kế gộp chung thông tin đăng ký học kỳ/khóa học với thông tin cá nhân của sinh viên vào một lớp `Student`. Đáng lẽ thông tin thực thể Sinh viên (`id`, `name`) phải được tách thành một lớp riêng biệt và độc lập với thông tin đăng ký học (`StudentId`, `courseName`, `semester`) để khi thay đổi thông tin cá nhân chỉ cần cập nhật tại một nơi duy nhất.
+8. **Câu hỏi 8**: Tại sao phương thức `getStudentCount()` lại chỉ đơn giản là `return studentList.size()`? Tại sao không cho Controller truy cập trực tiếp vào `studentList`?
+   * **Trả lời**: Để tuân thủ nguyên lý đóng gói thông tin. Nếu Controller nắm giữ và thao tác trực tiếp trên danh sách gốc `studentList`, nó có thể tùy ý gọi hàm `add()`, `clear()`, hay `remove()` phá vỡ hoàn toàn các quy tắc kiểm tra và logic nghiệp vụ được quản lý tập trung ở Model.
+9. **Câu hỏi 9**: Chuyện gì xảy ra về mặt hiệu năng (Time Complexity) khi gọi `findAndSortStudents()` trên một danh sách có hàng triệu sinh viên? Tại sao việc sao chép danh sách rồi sắp xếp lại mỗi lần tìm kiếm là một thiết kế tồi?
+   * **Trả lời**: Độ phức tạp thời gian khi sắp xếp sẽ là $O(N \log N)$ (Timsort của Java). Khi danh sách có hàng triệu bản ghi, việc sao chép mảng và sắp xếp lại liên tục trên RAM sẽ tiêu tốn tài nguyên bộ nhớ rất lớn và làm ứng dụng bị chậm, đơ. Thiết kế tối ưu hơn là duy trì một danh sách đã sắp xếp trước hoặc sử dụng cấu trúc dữ liệu tự sắp xếp (như `TreeSet`) hoặc đẩy phần xử lý lọc/sắp xếp xuống hệ quản trị cơ sở dữ liệu (Database Indexing).
+10. **Câu hỏi 10**: Tại sao phương thức `deleteStudent` lại dùng `studentList.remove(student)`? Cơ chế so sánh của `ArrayList.remove(Object)` dựa trên phương thức nào của lớp `Student`? Lớp `Student` của bạn đã override phương thức đó chưa, và chuyện gì xảy ra nếu chưa?
+    * **Trả lời**: `ArrayList.remove(Object)` duyệt qua danh sách và gọi phương thức `equals(Object)` của từng phần tử để so sánh với đối tượng cần xóa. Lớp `Student` hiện tại chưa override phương thức `equals(Object)`, vì vậy Java sẽ sử dụng triển khai mặc định của lớp `Object` (so sánh địa chỉ tham chiếu vùng nhớ bằng toán tử `==`). Chuyện xảy ra nếu chưa override là: ta chỉ có thể xóa được phần tử nếu truyền chính xác đối tượng cùng địa chỉ bộ nhớ Heap; nếu truyền một đối tượng sinh viên mới có cùng `id` và thông tin nhưng được tạo bằng từ khóa `new` ở nơi khác, hàm `remove()` sẽ không tìm thấy và không xóa được.
 
-### Câu hỏi 4: Vì sao cần tách View và Controller?
-Trả lời mẫu:
-- Để phân tách rõ trách nhiệm, dễ bảo trì, dễ mở rộng và test hơn.
+### 5.3 Constants.java & Design Decisions
+11. **Câu hỏi 11**: Tại sao các hằng số trong lớp Constants lại được khai báo là `public final` mà không có từ khóa `static`?
+    * **Trả lời**: Đây là lỗi thiết kế. Thiếu từ khóa `static` làm cho các thuộc tính này trở thành biến thực thể (instance variables). Các hằng số này sẽ không được nạp chung ở cấp độ lớp mà chỉ tồn tại khi ta khởi tạo đối tượng `new Constants()`.
+12. **Câu hỏi 12**: Không có từ khóa `static`, mỗi lần khởi tạo một đối tượng cần dùng hằng số (như `StudentView` hay `StudentController`), vùng nhớ Heap sẽ bị ảnh hưởng như thế nào?
+    * **Trả lời**: Mỗi lần khởi tạo một lớp cần dùng hằng số, Java sẽ tạo ra một thực thể `Constants` mới trên bộ nhớ Heap chứa các bản sao của tất cả thuộc tính hằng số này. Điều này gây lãng phí bộ nhớ Heap không cần thiết và tạo ra nhiều đối tượng rác khiến Garbage Collector (GC) phải dọn dẹp liên tục, làm giảm hiệu suất tổng thể của ứng dụng.
+13. **Câu hỏi 13**: Tại sao không khai báo lớp Constants là một `interface` hoặc `enum`? Khi nào nên dùng `interface` để chứa hằng số và tại sao việc đó lại được coi là một Anti-pattern (Constant Interface Pattern)?
+    * **Trả lời**: Dùng `interface` chỉ để chứa hằng số được coi là một Anti-pattern (Constant Interface Pattern) vì interface đại diện cho giao diện hành vi và thiết lập hợp đồng thiết kế cho các lớp triển khai nó. Việc implements interface chỉ để sử dụng các hằng số sẽ làm lộ chi tiết triển khai nội bộ ra API công khai của lớp con. Do đó, thiết kế chuẩn mực là sử dụng một lớp cụ thể (`final class`) kết hợp với constructor `private` để ngăn khởi tạo thực thể, và khai báo các hằng số là `public static final`.
+14. **Câu hỏi 14**: Điều gì xảy ra nếu tôi cố tình thay đổi giá trị của `MIN_CHOICE` trong runtime? Tại sao compiler lại ngăn chặn việc này?
+    * **Trả lời**: Trình biên dịch sẽ báo lỗi cú pháp ngay khi compile. Compiler ngăn chặn vì từ khóa `final` định nghĩa rằng thuộc tính đó là biến chỉ đọc (read-only) và không được phép gán lại giá trị mới sau khi đã được khởi tạo.
+15. **Câu hỏi 15**: Tại sao bạn lại tạo hẳn một class Constants riêng biệt thay vì khai báo trực tiếp hằng số ở nơi sử dụng chúng?
+    * **Trả lời**: Để quản lý hằng số tập trung tại một nơi (Centralized Configuration), tránh tình trạng trùng lặp mã nguồn và sử dụng các "Magic Values" rải rác trong code. Điều này giúp code dễ đọc hơn và khi cần thay đổi giá trị cấu hình (ví dụ: thay đổi `MAX_SEMESTER` lên 12) thì chỉ cần sửa ở đúng một vị trí.
 
-### Câu hỏi 5: Hàm run() trong Controller làm gì?
-Trả lời mẫu:
-- Hàm run() tạo vòng lặp chính, hiển thị menu và xử lý các lựa chọn của người dùng.
+### 5.4 StudentController.java & StudentView.java (Architecture & Control Flow)
+16. **Câu hỏi 16**: Tại sao StudentController lại giữ các tham chiếu đến cả `StudentModel`, `StudentView` và `Constants`? Mối quan hệ giữa các lớp này thuộc loại quan hệ nào trong OOP (Association, Aggregation hay Composition)?
+    * **Trả lời**: Controller đóng vai trò là bộ não điều phối dữ liệu giữa Model và View nên cần tham chiếu đến cả hai lớp này. Đây là mối quan hệ kết hợp (Association), cụ thể là Aggregation (Tụ hợp), vì các đối tượng Model và View được truyền vào Controller từ bên ngoài và có vòng đời độc lập, không bị hủy khi đối tượng Controller bị hủy.
+17. **Câu hỏi 17**: Tại sao StudentView không được phép gọi trực tiếp `StudentModel` để lấy dữ liệu? Kiến trúc MVC sẽ bị phá vỡ thế nào nếu View tự ý thay đổi dữ liệu trong Model?
+    * **Trả lời**: Để giữ sự độc lập giữa giao diện hiển thị (View) và logic xử lý dữ liệu (Model) nhằm tăng khả năng bảo trì và tái sử dụng. Nếu View gọi trực tiếp Model để thao tác dữ liệu, liên kết giữa chúng sẽ trở nên chặt chẽ (tight coupling). Khi giao diện thay đổi, logic nghiệp vụ cũng bị ảnh hưởng hoặc ngược lại. Nó cũng làm mất đi khả năng kiểm soát luồng dữ liệu trung tâm của Controller.
+18. **Câu hỏi 18**: Trong hàm `run()` của StudentController, tại sao lại dùng vòng lặp `while (true)`? Thiết kế này có thể gây ra vấn đề gì về hiệu năng và tài nguyên hệ thống nếu không được kiểm soát tốt?
+    * **Trả lời**: Vòng lặp `while (true)` duy trì giao diện console chạy liên tục và chỉ dừng khi người dùng chủ động chọn chức năng thoát (chọn 5). Nếu trong vòng lặp không chứa bất kỳ câu lệnh chặn luồng (blocking call) nào để chờ đợi dữ liệu vào (như đọc dữ liệu từ `Scanner`), CPU sẽ bị cuốn vào vòng lặp vô hạn chạy với tốc độ tối đa, đẩy mức sử dụng CPU lên 100% (gây ra lỗi Busy-waiting / Spinning).
+19. **Câu hỏi 19**: Tại sao các phương thức xử lý sự kiện như `handleCreateStudent` hay `handleUpdateOrDelete` lại nằm ở Controller chứ không nằm ở Model?
+    * **Trả lời**: Vì đây là logic điều phối luồng xử lý của ứng dụng (Workflow Logic / Application Logic), không phải logic nghiệp vụ dữ liệu cốt lõi (Domain Logic). Controller điều phối bằng cách: nhận chỉ thị, gọi View để lấy thông tin nhập liệu của người dùng, kiểm tra điều kiện nghiệp vụ thông qua Model, ghi nhận dữ liệu vào Model, và ra lệnh cho View cập nhật thông tin hiển thị. Model chỉ nên tập trung quản lý dữ liệu và thực thi các quy tắc nghiệp vụ của riêng nó.
+20. **Câu hỏi 20**: Nếu tôi muốn thay thế giao diện Console hiện tại bằng giao diện đồ họa (GUI) như JavaFX, tôi sẽ phải sửa đổi những lớp nào? Thiết kế hiện tại của bạn đã thực sự đảm bảo tính "Loose Coupling" (liên kết lỏng) chưa?
+    * **Trả lời**: Ta sẽ phải sửa đổi hoặc viết lại hoàn toàn lớp `StudentView`, đồng thời sửa lại các đoạn mã gọi View trong `StudentController`. Thiết kế hiện tại chưa thực sự đạt được liên kết lỏng (loose coupling) hoàn hảo vì Controller vẫn trực tiếp khai báo và phụ thuộc vào lớp cụ thể `StudentView`. Thiết kế chuẩn hơn là Controller nên giao tiếp với View thông qua một Interface (ví dụ: `IStudentView`), khi đó chỉ cần truyền đối tượng cài đặt giao diện GUI vào Controller mà không cần thay đổi bất cứ dòng code nào của Controller.
 
-### Câu hỏi 6: Bạn làm sao để kiểm tra sinh viên đã tồn tại?
-Trả lời mẫu:
-- Dùng phương thức checkStudentRegistered() để kiểm tra ID, semester và courseName.
-
-### Câu hỏi 7: Tại sao dùng ArrayList?
-Trả lời mẫu:
-- Vì cần lưu nhiều sinh viên và có thể thêm, xóa, duyệt phần tử dễ dàng.
-
-### Câu hỏi 8: Hàm findAndSortStudents() hoạt động như thế nào?
-Trả lời mẫu:
-- Nó duyệt toàn bộ danh sách, lọc sinh viên có tên chứa chuỗi nhập vào, rồi dùng Collections.sort() để sắp xếp.
-
-### Câu hỏi 9: Cách cập nhật sinh viên được thực hiện thế nào?
-Trả lời mẫu:
-- Người dùng nhập ID, hệ thống tìm các bản ghi phù hợp, sau đó chọn bản ghi và cập nhật thông tin.
-
-### Câu hỏi 10: Bạn có thể giải thích ý nghĩa của Validation không?
-Trả lời mẫu:
-- Validation dùng để kiểm tra dữ liệu đầu vào từ người dùng trước khi xử lý, tránh lỗi và dữ liệu không hợp lệ.
-
-### Câu hỏi 11: Nếu muốn mở rộng thêm chức năng, bạn sẽ làm gì?
-Trả lời mẫu:
-- Tôi sẽ thêm lớp service hoặc repository, tách logic tốt hơn, đồng thời cập nhật View và Controller tương ứng.
-
-### Câu hỏi 12: Bạn đã áp dụng những nguyên tắc lập trình nào trong project này?
-Trả lời mẫu:
-- Tôi đã sử dụng đóng gói, tách lớp, tái sử dụng, kiểm tra đầu vào và chia nhỏ chức năng thành các phương thức riêng biệt.
-
-## 6. Mẫu câu trả lời ngắn để ghi nhớ
-- Controller điều hướng luồng chương trình.
-- Model xử lý dữ liệu và logic nghiệp vụ.
-- View chịu trách nhiệm giao diện console.
-- Validation dùng để kiểm tra dữ liệu đầu vào.
-- Project này là một ví dụ đơn giản về kiến trúc MVC.
-
-## 7. Gợi ý khi trả lời GV
-- Nói ngắn gọn, rõ ràng và có logic.
-- Nên kết nối câu trả lời với code thực tế trong project.
