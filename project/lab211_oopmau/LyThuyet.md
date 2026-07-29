@@ -79,116 +79,230 @@ public class Car {
 
 ## 🎯 5. Four Pillars of OOP (4 trụ cột OOP)
 
-### 🧱 (1) Encapsulation — **Đóng gói**
-
-Ẩn thông tin bên trong đối tượng và chỉ cho phép truy cập qua các **getter/setter**.
-
-```java
-public class Account {
-    private double balance; // ẩn thông tin
-
-    public void setBalance(double balance) {
-        if (balance > 0) this.balance = balance;
-    }
-
-    public double getBalance() {
-        return balance;
-    }
-}
-```
+Bốn trụ cột của lập trình hướng đối tượng (OOP) là những nguyên lý cốt lõi giúp thiết kế phần mềm linh hoạt, dễ bảo trì, mở rộng và tái sử dụng code.
 
 ---
 
-### 🧬 (2) Inheritance — **Kế thừa**
+### 🧱 (1) Encapsulation — **Tính đóng gói**
 
-Một lớp có thể **kế thừa thuộc tính & phương thức** từ lớp khác.
-Giúp tái sử dụng code và mở rộng chức năng.
+* **Khái niệm (Information Hiding)**: 
+  Đóng gói là quá trình che giấu các thông tin chi tiết về cấu trúc dữ liệu bên trong đối tượng (các thuộc tính) và chỉ công khai các phương thức hành vi để tương tác với đối tượng đó.
+* **Mục đích**:
+  * **Bảo vệ toàn vẹn dữ liệu**: Ngăn chặn mã bên ngoài chỉnh sửa trực tiếp các thuộc tính của đối tượng sang trạng thái không hợp lệ.
+  * **Giảm tính liên kết (Low Coupling)**: Thay đổi cấu trúc dữ liệu nội bộ của lớp mà không ảnh hưởng đến các lớp khác sử dụng nó.
+* **Cách thực hiện trong Java**:
+  1. Khai báo thuộc tính là `private`.
+  2. Cung cấp các hàm truy cập công khai: **Getter** (để đọc dữ liệu) và **Setter** (để ghi dữ liệu).
+  3. **Kiểm soát dữ liệu đầu vào (Validation)** ở trong phương thức Setter.
+  4. **Bất biến (Immutability)**: Nếu muốn tạo đối tượng Read-only, chỉ cung cấp Getter, không cung cấp Setter và khai báo các trường là `final`.
 
-```java
-class Animal {
-    void eat() { System.out.println("Đang ăn"); }
-}
+* **Ví dụ thực tế**:
+  ```java
+  public class BankAccount {
+      private String accountNumber;
+      private double balance; // private để ngăn việc sửa số dư tùy tiện
 
-class Dog extends Animal {
-    void bark() { System.out.println("Gâu gâu"); }
-}
+      public BankAccount(String accountNumber, double initialBalance) {
+          this.accountNumber = accountNumber;
+          if (initialBalance >= 0) {
+              this.balance = initialBalance;
+          }
+      }
 
-public class Main {
-    public static void main(String[] args) {
-        Dog dog = new Dog();
-        dog.eat();   // kế thừa từ Animal
-        dog.bark();  // của riêng Dog
-    }
-}
-```
+      // Getter cho phép đọc số dư công khai
+      public double getBalance() {
+          return this.balance;
+      }
 
----
+      // Setter kiểm soát chặt chẽ việc nạp tiền
+      public void deposit(double amount) {
+          if (amount > 0) {
+              this.balance += amount; // Hợp lệ mới thực hiện cộng
+          } else {
+              System.out.println("Số tiền nạp phải lớn hơn 0!");
+          }
+      }
 
-### 🧠 (3) Polymorphism — **Đa hình**
-
-Một hành động có thể **thực hiện theo nhiều cách khác nhau**.
-Gồm 2 loại:
-
-* **Compile-time polymorphism (Overloading)**
-* **Runtime polymorphism (Overriding)**
-
-#### 👉 Overloading (nạp chồng phương thức)
-
-Cùng tên method, khác tham số.
-
-```java
-class MathUtil {
-    int add(int a, int b) { return a + b; }
-    double add(double a, double b) { return a + b; }
-}
-```
-
-#### 👉 Overriding (ghi đè phương thức)
-
-Lớp con định nghĩa lại phương thức của lớp cha.
-
-```java
-class Animal {
-    void sound() { System.out.println("Animal sound"); }
-}
-class Dog extends Animal {
-    @Override
-    void sound() { System.out.println("Gâu gâu"); }
-}
-```
+      // Setter kiểm soát chặt chẽ việc rút tiền
+      public void withdraw(double amount) {
+          if (amount > 0 && amount <= this.balance) {
+              this.balance -= amount;
+          } else {
+              System.out.println("Giao dịch thất bại: Số dư không đủ hoặc số tiền không hợp lệ!");
+          }
+      }
+  }
+  ```
 
 ---
 
-### 🧩 (4) Abstraction — **Trừu tượng hóa**
+### 🧬 (2) Inheritance — **Tính kế thừa**
 
-Ẩn chi tiết bên trong, chỉ hiển thị phần cần thiết.
-Thực hiện bằng **abstract class** hoặc **interface**.
+* **Khái niệm**: 
+  Cho phép một lớp mới (Subclass / Lớp con) kế thừa và sử dụng lại các thuộc tính, phương thức của một lớp đã có (Superclass / Lớp cha). Thiết lập mối quan hệ **"IS-A"** (Ví dụ: `Dog` IS-A `Animal`).
+* **Mục đích**:
+  * **Tái sử dụng mã nguồn (Code Reusability)**: Tránh viết lại mã giống nhau ở nhiều class.
+  * **Tạo tính phân cấp (Hierarchy)**: Xây dựng hệ thống các đối tượng có quan hệ từ tổng quát đến chi tiết.
+* **Cách thực hiện trong Java**:
+  * Sử dụng từ khóa `extends` cho class và `implements` cho interface.
+  * Java hỗ trợ **Đơn kế thừa (Single Inheritance)** đối với class để tránh hiện tượng nhập nhằng (vấn đề Diamond Problem). Tuy nhiên, một class có thể triển khai **Nhiều interface (Multiple Interfaces)**.
+* **Quy tắc vàng (Rule of Thumb)**:
+  * Tránh lạm dụng kế thừa nếu mối quan hệ không thực sự là "IS-A". Hãy ưu tiên sử dụng **Composition (Kết hợp - mối quan hệ "HAS-A")** thay vì **Inheritance** để giảm sự liên kết chặt chẽ (tight coupling) giữa cha và con.
 
-#### 👉 Abstract class
+* **Ví dụ thực tế**:
+  ```java
+  // Lớp cha tổng quát
+  class Employee {
+      protected String name;
+      protected double baseSalary;
 
-```java
-abstract class Animal {
-    abstract void sound();
-}
+      public Employee(String name, double baseSalary) {
+          this.name = name;
+          this.baseSalary = baseSalary;
+      }
 
-class Dog extends Animal {
-    void sound() { System.out.println("Gâu gâu"); }
-}
-```
+      public double calculateSalary() {
+          return baseSalary;
+      }
+  }
 
-#### 👉 Interface
+  // Lớp con kế thừa từ Employee và mở rộng thuộc tính/phương thức
+  class Developer extends Employee {
+      private double bonus;
 
-```java
-interface Vehicle {
-    void run();
-}
+      public Developer(String name, double baseSalary, double bonus) {
+          super(name, baseSalary); // Gọi constructor của lớp cha
+          this.bonus = bonus;
+      }
 
-class Car implements Vehicle {
-    public void run() {
-        System.out.println("Xe đang chạy");
-    }
-}
-```
+      @Override // Ghi đè phương thức tính lương để cộng thêm bonus
+      public double calculateSalary() {
+          return baseSalary + bonus;
+      }
+  }
+  ```
+
+---
+
+### 🧠 (3) Polymorphism — **Tính đa hình**
+
+* **Khái niệm**: 
+  Một đối tượng hoặc một hành động có thể thể hiện dưới nhiều hình thái (cách thức) khác nhau. Ví dụ: cùng là hành động `sound()` (kêu), nhưng con chó kêu khác con mèo.
+* **Mục đích**:
+  * Giúp chương trình có tính linh hoạt cực cao: Viết code tương tác với lớp cha tổng quát, nhưng lúc chạy chương trình sẽ tự động gọi đúng hành vi của lớp con cụ thể.
+* **Hai loại đa hình chính**:
+  1. **Compile-time Polymorphism (Đa hình lúc biên dịch / Static Binding)**:
+     * Cài đặt qua **Method Overloading (Nạp chồng phương thức)**.
+     * Trình biên dịch xác định phương thức nào được gọi ngay lúc compile dựa trên **chữ ký phương thức (Method Signature)**: gồm số lượng, kiểu dữ liệu và thứ tự của tham số truyền vào.
+  2. **Runtime Polymorphism (Đa hình lúc chạy / Dynamic Binding)**:
+     * Cài đặt qua **Method Overriding (Ghi đè phương thức)**.
+     * Phương thức thực sự được gọi sẽ do kiểu đối tượng thực tế tại thời điểm Runtime quyết định (chứ không phải kiểu tham chiếu được khai báo lúc compile). Điều này kết hợp chặt chẽ với cơ chế **Upcasting** (gán đối tượng con cho tham chiếu cha).
+
+* **Ví dụ thực tế**:
+  ```java
+  // Minh họa Overloading (Compile-time)
+  class Calculator {
+      public int add(int a, int b) { return a + b; }
+      public double add(double a, double b) { return a + b; } // Khác kiểu dữ liệu
+      public int add(int a, int b, int c) { return a + b + c; } // Khác số lượng tham số
+  }
+
+  // Minh họa Overriding & Upcasting (Runtime)
+  class Animal {
+      public void sound() {
+          System.out.println("Động vật phát ra âm thanh");
+      }
+  }
+
+  class Dog extends Animal {
+      @Override
+      public void sound() {
+          System.out.println("Gâu gâu");
+      }
+  }
+
+  class Cat extends Animal {
+      @Override
+      public void sound() {
+          System.out.println("Meo meo");
+      }
+  }
+
+  public class Main {
+      public static void main(String[] args) {
+          // Upcasting: Tham chiếu là Animal, đối tượng thực tế trên Heap là Dog/Cat
+          Animal myDog = new Dog(); 
+          Animal myCat = new Cat();
+
+          myDog.sound(); // In ra: Gâu gâu (Dynamic Binding quyết định gọi Dog.sound())
+          myCat.sound(); // In ra: Meo meo (Dynamic Binding quyết định gọi Cat.sound())
+      }
+  }
+  ```
+
+---
+
+### 🧩 (4) Abstraction — **Tính trừu tượng**
+
+* **Khái niệm**: 
+  Trừu tượng hóa là việc tập trung vào những đặc điểm cốt lõi, quan trọng nhất của đối tượng và bỏ qua các chi tiết cài đặt cụ thể bên dưới. Trả lời câu hỏi **"Hệ thống làm gì?"** thay vì **"Làm thế nào?"**.
+* **Mục đích**:
+  * Giảm thiểu sự phức tạp khi thiết kế hệ thống lớn.
+  * Định nghĩa ra một bộ khung thiết kế (blueprint) chung để bắt buộc các lớp con tuân thủ và tự triển khai chi tiết.
+* **Cách thực hiện trong Java**:
+  1. **Abstract Class (Lớp trừu tượng)**:
+     * Sử dụng từ khóa `abstract`.
+     * Không thể khởi tạo đối tượng trực tiếp bằng `new`.
+     * Có thể chứa cả phương thức trừu tượng (không có thân hàm `{}`) lẫn phương thức bình thường (có thân hàm).
+     * Có thể chứa biến trạng thái (instance variables) bình thường.
+  2. **Interface (Giao diện)**:
+     * Dùng từ khóa `interface`.
+     * Đại diện cho một hợp đồng hành vi (**"CAN-DO"**).
+     * Chỉ chứa các hằng số (`public static final`) và các phương thức trừu tượng (mặc định là `public abstract`).
+     * **Cải tiến từ Java 8+**: Interface được bổ sung phương thức **`default`** và **`static`** có thân hàm để định nghĩa sẵn hành vi chung mà không phá vỡ tính tương thích ngược của các lớp đã implements nó.
+
+* **Ví dụ thực tế**:
+  ```java
+  // Định nghĩa một Interface đại diện cho hành vi thanh toán
+  interface PaymentMethod {
+      void pay(double amount); // Phương thức trừu tượng
+  }
+
+  // Lớp con triển khai chi tiết phương thức thanh toán
+  class CreditCardPayment implements PaymentMethod {
+      private String cardNumber;
+
+      public CreditCardPayment(String cardNumber) {
+          this.cardNumber = cardNumber;
+      }
+
+      @Override
+      public void pay(double amount) {
+          System.out.println("Đang thanh toán $" + amount + " bằng thẻ tín dụng: " + cardNumber);
+      }
+  }
+
+  class PaypalPayment implements PaymentMethod {
+      private String email;
+
+      public PaypalPayment(String email) {
+          this.email = email;
+      }
+
+      @Override
+      public void pay(double amount) {
+          System.out.println("Đang thanh toán $" + amount + " qua ví điện tử Paypal: " + email);
+      }
+  }
+
+  // Lớp gọi thanh toán không cần quan tâm thẻ hay Paypal xử lý thế nào ở bên trong
+  class OrderProcessor {
+      public void processOrder(PaymentMethod paymentMethod, double totalAmount) {
+          // Tính trừu tượng: Chỉ gọi pay(), không quan tâm chi tiết thẻ hay ví Paypal xử lý ra sao
+          paymentMethod.pay(totalAmount); 
+      }
+  }
+  ```
 
 ---
 
