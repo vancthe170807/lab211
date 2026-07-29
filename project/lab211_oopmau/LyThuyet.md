@@ -350,13 +350,161 @@ Lưu địa chỉ tham chiếu trỏ đến vùng nhớ Heap nơi đối tượn
 * **`enum` (Enumeration)**: Kiểu dữ liệu đại diện cho một tập hợp các hằng số cố định.
   * *Khái niệm*: Một class đặc biệt định nghĩa một danh sách các lựa chọn được định danh trước.
   * *Khi nào dùng*: Khi dữ liệu chỉ được phép nhận một trong số các giá trị cố định và biết trước (ví dụ: Giới tính `MALE`/`FEMALE`, Trạng thái học tập `ACTIVE`/`INACTIVE`, Các ngày trong tuần, Các hướng `NORTH`/`SOUTH`/`EAST`/`WEST`). Sử dụng `enum` thay vì String hoặc số nguyên giúp đảm bảo an toàn kiểu dữ liệu (Type Safety) lúc compile-time.
-* **`List` / `ArrayList`**: Tập hợp dữ liệu tuyến tính động.
-  * *Khái niệm*: Cấu trúc dữ liệu danh sách có kích thước co giãn động.
-  * *Khi nào dùng*: Quản lý danh sách đối tượng (như danh sách học sinh, danh sách đơn hàng) khi chưa biết trước số lượng phần tử tối đa hoặc cần thêm/xóa phần tử thường xuyên.
+* **`List` / `Set` / `Map`**: Các cấu trúc dữ liệu thuộc **Java Collections Framework** dùng để lưu trữ và quản lý tập hợp đối tượng. Xem chi tiết đầy đủ ở **Mục 15**.
 
 ---
 
-## ⚙️ 15. OOP Best Practices
+## 📚 15. Java Collections Framework (Khung chứa dữ liệu)
+
+Java Collections Framework (JCF) cung cấp một kiến trúc thống nhất để lưu trữ, quản lý và thao tác trên một tập hợp các đối tượng.
+
+### 📌 15.1 Sơ đồ phân cấp tổng quan (Hierarchy)
+
+```
+       ┌───────────────── Interface Collection ─────────────────┐
+       │                                                        │
+┌──────┴──────┐          ┌──────────────┴──────────────┐  ┌─────┴──────┐
+│  Interface  │          │          Interface          │  │ Interface  │
+│    List     │          │             Set             │  │   Queue    │
+└──────┬──────┘          └──────────────┬──────────────┘  └────────────┘
+       ├─ ArrayList                     ├─ HashSet
+       └─ LinkedList                    ├─ LinkedHashSet
+                                        └─ TreeSet (SortedSet)
+
+┌──────────────────────────────────────────────────────────────┐
+│                      Interface Map                           │
+└──────────────────────────────┬───────────────────────────────┘
+                               ├─ HashMap
+                               ├─ LinkedHashMap
+                               └─ TreeMap (SortedMap)
+```
+*(Lưu ý: `Map` không kế thừa từ `Collection` interface nhưng vẫn là một phần quan trọng của Collections Framework).*
+
+---
+
+### 📂 15.2 List Interface (Danh sách có thứ tự)
+
+**Đặc điểm**: Duy trì thứ tự phần tử lúc chèn vào (insertion order), cho phép phần tử trùng lặp (duplicate) và cho phép truy cập ngẫu nhiên qua chỉ số (index - 0-indexed).
+
+#### 1. ArrayList
+* **Khái niệm**: Sử dụng một **mảng động (dynamic array)** làm cấu trúc dữ liệu bên dưới. Khi mảng đầy, Java tự động tạo mảng mới lớn hơn (thường gấp 1.5 lần) và sao chép các phần tử cũ sang.
+* **Thời gian thực thi (Time Complexity)**:
+  * Lấy phần tử (`get(index)`): $O(1)$ - cực nhanh.
+  * Thêm/Xóa ở cuối (`add(e)`, `remove(last)`): $O(1)$ (hoặc $O(n)$ khi mảng phải resize nhưng trung bình vẫn là $O(1)$).
+  * Thêm/Xóa ở đầu/giữa (`add(index, e)`, `remove(index)`): $O(n)$ do phải dịch chuyển toàn bộ các phần tử đứng sau.
+* **Khi nào nên dùng**:
+  * Cần truy xuất (đọc) phần tử thường xuyên dựa trên chỉ số (index).
+  * Kích thước dữ liệu ít thay đổi hoặc chỉ thêm ở cuối danh sách (ví dụ: hiển thị danh sách sản phẩm, danh sách sinh viên chỉ để đọc và tìm kiếm).
+* **Khi nào không nên dùng**:
+  * Cần thêm hoặc xóa các phần tử liên tục ở đầu hoặc giữa danh sách (làm giảm hiệu năng hệ thống đáng kể).
+
+#### 2. LinkedList
+* **Khái niệm**: Sử dụng cấu trúc **danh sách liên kết đôi (Doubly Linked List)**. Mỗi phần tử (Node) chứa dữ liệu và hai con trỏ trỏ đến Node đứng trước (`prev`) và Node đứng sau (`next`).
+* **Thời gian thực thi (Time Complexity)**:
+  * Lấy phần tử (`get(index)`): $O(n)$ - phải duyệt từ đầu hoặc cuối đến phần tử cần tìm.
+  * Thêm/Xóa ở đầu/cuối (`addFirst()`, `removeFirst()`, `addLast()`, `removeLast()`): $O(1)$ - cực nhanh.
+  * Thêm/Xóa ở giữa: $O(n)$ nếu cần tìm vị trí chèn, nhưng nếu đã có con trỏ trỏ tới vị trí đó thì chỉ mất $O(1)$ để thay đổi các liên kết.
+* **Khi nào nên dùng**:
+  * Thường xuyên chèn/xóa phần tử ở đầu/cuối danh sách.
+  * Thích hợp làm các cấu trúc dữ liệu kiểu **Hàng đợi (Queue)**, **Ngăn xếp (Stack)** hoặc **Deque (Double-Ended Queue)**.
+* **Khi nào không nên dùng**:
+  * Cần truy cập phần tử ngẫu nhiên liên tục theo index (phải duyệt tuần tự rất tốn thời gian).
+  * Ứng dụng hạn chế về bộ nhớ (vì mỗi Node trong LinkedList tiêu tốn thêm bộ nhớ để lưu trữ con trỏ `prev` và `next`).
+
+#### Bảng so sánh ArrayList vs LinkedList
+
+| Đặc điểm | ArrayList | LinkedList |
+| :--- | :--- | :--- |
+| **Cấu trúc bên dưới** | Mảng động (Dynamic Array) | Danh sách liên kết đôi (Doubly Linked List) |
+| **Vùng nhớ** | Liên tục (Contiguous memory) | Phân tán trên Heap (Non-contiguous memory) |
+| **Truy cập ngẫu nhiên (`get(index)`)** | **$O(1)$** (Rất nhanh) | **$O(n)$** (Phải duyệt tuần tự) |
+| **Thêm/Xóa ở đầu/giữa** | **$O(n)$** (Phải dịch chuyển phần tử) | **$O(1)$** (Nếu đã đứng tại vị trí cần chèn) |
+| **Thêm/Xóa ở cuối** | **$O(1)$** (Amortized) | **$O(1)$** |
+| **Chi phí bộ nhớ** | Thấp (Chỉ lưu trữ phần tử thực tế) | Cao (Tốn thêm bộ nhớ lưu liên kết `next`/`prev`) |
+
+---
+
+### 📂 15.3 Set Interface (Tập hợp không trùng lặp)
+
+**Đặc điểm**: Không cho phép lưu trữ các phần tử trùng lặp (nếu thêm phần tử đã tồn tại, phương thức `add()` sẽ trả về `false` và không ghi đè). Thường dùng để loại bỏ trùng lặp hoặc kiểm tra nhanh sự tồn tại của phần tử.
+
+#### 1. HashSet
+* **Khái niệm**: Sử dụng cơ chế bảng băm (**HashTable**) dưới dạng ngầm định của `HashMap`.
+* **Đặc tính**: Không duy trì bất kỳ thứ tự nào của các phần tử khi duyệt. Cho phép lưu giá trị `null` (tối đa 1 phần tử).
+* **Hiệu năng**: Thêm (`add`), xóa (`remove`), tìm kiếm (`contains`): $O(1)$ trung bình.
+* **Khi nào nên dùng**: Chỉ cần lọc trùng lặp và kiểm tra sự tồn tại của phần tử nhanh nhất có thể mà không quan tâm đến thứ tự.
+* **Khi nào không nên dùng**: Cần duy trì thứ tự chèn hoặc sắp xếp các phần tử.
+
+#### 2. LinkedHashSet
+* **Khái niệm**: Kế thừa từ `HashSet` nhưng bổ sung một **LinkedList** chạy qua các phần tử để liên kết chúng lại.
+* **Đặc tính**: **Duy trì thứ tự chèn (insertion order)**. Phần tử nào thêm trước sẽ xuất hiện trước khi duyệt.
+* **Hiệu năng**: Thêm, xóa, tìm kiếm: $O(1)$. Hiệu năng hơi kém hơn `HashSet` một chút do phải tốn chi phí cập nhật các liên kết.
+* **Khi nào nên dùng**: Cần lọc trùng lặp dữ liệu nhưng vẫn muốn giữ nguyên thứ tự xuất hiện ban đầu của phần tử.
+
+#### 3. TreeSet
+* **Khái niệm**: Sử dụng cấu trúc **Cây đỏ-đen (Red-Black Tree)** để lưu trữ phần tử.
+* **Đặc tính**: **Tự động sắp xếp các phần tử** theo thứ tự tự nhiên (tăng dần) hoặc theo một `Comparator` tự định nghĩa. Không cho phép chứa giá trị `null` (sẽ ném ra `NullPointerException`).
+* **Hiệu năng**: Thêm, xóa, tìm kiếm: $O(\log n)$ do phải tái cân bằng cây khi thay đổi dữ liệu.
+* **Khi nào nên dùng**: Cần lưu trữ các phần tử không trùng lặp và yêu cầu danh sách luôn được sắp xếp theo thứ tự (ví dụ: lấy ra các số điểm từ thấp đến cao không trùng lặp).
+
+#### Bảng so sánh các triển khai của Set
+
+| Đặc điểm | HashSet | LinkedHashSet | TreeSet |
+| :--- | :--- | :--- | :--- |
+| **Cấu trúc dữ liệu** | HashTable | HashTable + LinkedList | Cây đỏ-đen (Red-Black Tree) |
+| **Thứ tự phần tử** | Không xác định (Unordered) | Thứ tự chèn (Insertion order) | Được sắp xếp (Sorted order) |
+| **Tốc độ (`add/remove/contains`)** | **$O(1)$** (Nhanh nhất) | **$O(1)$** (Hơi chậm hơn HashSet) | **$O(\log n)$** (Chậm nhất) |
+| **Chấp nhận `null`** | ✅ Có (Tối đa 1 phần tử) | ✅ Có (Tối đa 1 phần tử) | ❌ Không (Ném Exception) |
+
+---
+
+### 📂 15.4 Map Interface (Tập hợp Khóa - Giá trị)
+
+**Đặc điểm**: Quản lý dữ liệu dưới dạng các cặp **Khóa - Giá trị (Key - Value)**. Mỗi Key là duy nhất (không được trùng lặp), còn Value có thể trùng lặp. Nếu thêm một Key đã tồn tại với Value mới, Value cũ sẽ bị ghi đè.
+
+#### 1. HashMap
+* **Khái niệm**: Sử dụng **bảng băm (HashTable)** để lưu trữ cặp Key-Value.
+* **Đặc tính**: Không duy trì thứ tự của các Key. Cho phép **1 key null** và nhiều value null.
+* **Hiệu năng**: Thêm (`put`), tìm (`get`), xóa (`remove`): $O(1)$ trung bình.
+* **Khi nào nên dùng**: Cần quản lý dữ liệu dạng từ điển (tra cứu thông tin theo mã/id định danh) với hiệu năng tối ưu và không quan tâm đến thứ tự của dữ liệu.
+* **Khi nào không nên dùng**: Cần sắp xếp hoặc lưu giữ thứ tự chèn của các Key.
+
+#### 2. LinkedHashMap
+* **Khái niệm**: Kế thừa `HashMap` kết hợp thêm cấu trúc **LinkedList** liên kết giữa các Node.
+* **Đặc tính**: **Duy trì thứ tự chèn (insertion order)** của các Key, hoặc thứ tự truy cập gần nhất (dùng để làm bộ nhớ đệm Cache LRU).
+* **Hiệu năng**: Thêm, tìm, xóa: $O(1)$. Tốn nhiều bộ nhớ hơn HashMap để lưu liên kết.
+* **Khi nào nên dùng**: Cần tra cứu nhanh theo khóa và bắt buộc dữ liệu phải hiển thị đúng theo thứ tự chèn vào.
+
+#### 3. TreeMap
+* **Khái niệm**: Sử dụng cấu trúc **Cây đỏ-đen (Red-Black Tree)** để lưu trữ các cặp Key-Value.
+* **Đặc tính**: **Tự động sắp xếp các Key** theo thứ tự tự nhiên hoặc theo `Comparator` tự định nghĩa. **Không cho phép key null** (gây lỗi `NullPointerException`), nhưng cho phép nhiều value null.
+* **Hiệu năng**: Thêm, tìm, xóa: $O(\log n)$.
+* **Khi nào nên dùng**: Cần dữ liệu Key-Value luôn được sắp xếp theo Key (ví dụ: in ra bảng thống kê doanh số sắp xếp theo mã sản phẩm tăng dần).
+
+#### Bảng so sánh các triển khai của Map
+
+| Đặc điểm | HashMap | LinkedHashMap | TreeMap |
+| :--- | :--- | :--- | :--- |
+| **Cấu trúc dữ liệu** | HashTable | HashTable + LinkedList | Cây đỏ-đen (Red-Black Tree) |
+| **Thứ tự của Key** | Không xác định | Thứ tự chèn (Insertion order) | Sắp xếp tăng dần theo Key |
+| **Tốc độ (`put/get/remove`)** | **$O(1)$** (Nhanh nhất) | **$O(1)$** (Hơi chậm hơn HashMap) | **$O(\log n)$** (Chậm nhất) |
+| **Chấp nhận Key `null`** | ✅ Có (Tối đa 1 key null) | ✅ Có (Tối đa 1 key null) | ❌ Không (Ném Exception) |
+
+---
+
+### 📊 15.5 Bảng so sánh tổng quan giữa List, Set và Map
+
+| Tiêu chí | List | Set | Map |
+| :--- | :--- | :--- | :--- |
+| **Bản chất** | Danh sách phần tử tuyến tính. | Tập hợp phần tử độc nhất. | Tập hợp các cặp Khóa - Giá trị. |
+| **Trùng lặp dữ liệu** | ✅ Cho phép. | ❌ Không cho phép. | Khóa: ❌ Không trùng.<br>Giá trị: ✅ Cho phép trùng. |
+| **Truy cập phần tử** | Thông qua chỉ số index: `list.get(i)`. | Phải duyệt qua `Iterator` hoặc `for-each` (không lấy qua index). | Thông qua khóa (Key): `map.get(key)`. |
+| **Phương thức cơ bản** | `add(e)`, `get(index)`, `remove(index)` | `add(e)`, `contains(e)`, `remove(e)` | `put(k, v)`, `get(k)`, `remove(k)` |
+| **Khi nào nên dùng** | Khi cần lưu trữ danh sách theo thứ tự cụ thể, cho phép trùng lặp, cần thao tác qua index. | Khi cần lưu danh sách không trùng lặp và kiểm tra nhanh một phần tử có tồn tại hay không. | Khi dữ liệu có cặp liên kết khóa-giá trị rõ ràng, cần tìm kiếm thông tin cực nhanh bằng khóa. |
+
+---
+
+## ⚙️ 16. OOP Best Practices
 
 - Dùng **Encapsulation** để bảo vệ dữ liệu
 
@@ -368,7 +516,7 @@ Lưu địa chỉ tham chiếu trỏ đến vùng nhớ Heap nơi đối tượn
 
 ---
 
-## 🎓 16. Tổng kết sơ đồ tư duy OOP Java
+## 🎓 17. Tổng kết sơ đồ tư duy OOP Java
 
 ```
 OOP Java
@@ -385,6 +533,7 @@ OOP Java
 ├── Access Modifiers
 ├── Static / Final
 ├── Data Types (int, double, String, enum...)
+├── Java Collections Framework (List, Set, Map...)
 └── Interface & Abstract Class
 ```
 
