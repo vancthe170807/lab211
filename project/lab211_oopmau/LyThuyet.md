@@ -504,6 +504,77 @@ Java Collections Framework (JCF) cung cấp một kiến trúc thống nhất đ
 
 ---
 
+### 🧠 15.6 DSA Deep Dive (Phân tích dưới góc độ Cấu trúc dữ liệu & Giải thuật)
+
+Để hiểu rõ tại sao các Collection trong Java hoạt động như vậy, chúng ta cần tìm hiểu các cấu trúc dữ liệu và giải thuật (DSA) nền tảng được cài đặt bên dưới chúng:
+
+#### 1. Mảng động (Dynamic Array) — Nền tảng của `ArrayList`
+* **Cơ chế lưu trữ vật lý**: `ArrayList` chứa một mảng Java thuần túy (`Object[] elementData`). Mảng này được cấp phát một vùng nhớ **liên tục (contiguous memory)** trên Heap.
+* **Cơ chế Tự động tăng kích thước (Resizing / Dynamic Allocator)**:
+  * Khi khởi tạo mặc định, mảng có dung lượng ban đầu (`initial capacity`) là **10**.
+  * Khi số lượng phần tử đạt tới giới hạn của mảng hiện tại (`size == capacity`), Java thực hiện:
+    1. Tính toán dung lượng mới: `newCapacity = capacity + (capacity >> 1)` (tăng khoảng **1.5 lần** hay 50% dung lượng cũ).
+    2. Cấp phát một mảng mới trên Heap có kích thước `newCapacity`.
+    3. Copy toàn bộ phần tử từ mảng cũ sang mảng mới bằng hàm native `System.arraycopy()`.
+    4. Trỏ biến tham chiếu mảng sang mảng mới, mảng cũ sẽ được Garbage Collector thu gom.
+* **Thời gian hao phí Amortized Time (Chi phí phân bổ)**:
+  * Thao tác chèn ở cuối danh sách thường là $O(1)$. Tuy nhiên, đôi khi nó tốn $O(n)$ do phải thực hiện cấp phát lại và copy mảng. Nhưng chi phí chèn $O(n)$ này rất hiếm gặp. Khi phân bổ đều cho $n$ lần chèn, độ phức tạp trung bình (Amortized Time) vẫn được tính là **$O(1)$**.
+* **Cache Locality (Tính cục bộ của bộ nhớ đệm)**:
+  * Do các phần tử nằm liền kề nhau trên bộ nhớ vật lý, khi CPU truy cập phần tử `elementData[i]`, nó sẽ nạp sẵn cả các phần tử lân cận (`elementData[i+1]`, `elementData[i+2]`,...) vào bộ nhớ đệm CPU Cache. Điều này giúp duyệt `ArrayList` nhanh vượt trội so với các cấu trúc phân tán khác do giảm thiểu hiện tượng **Cache Miss**.
+
+#### 2. Danh sách liên kết đôi (Doubly Linked List) — Nền tảng của `LinkedList`
+* **Cơ chế lưu trữ vật lý**: Không dùng mảng liên tục. Mỗi phần tử được bọc trong một đối tượng gọi là **Node**. Các Node được cấp phát ở các vị trí **rải rác (non-contiguous memory)** trên Heap.
+* **Cấu trúc Node**:
+  ```
+  ┌───────────────┐
+  │     Node      │
+  ├───────────────┤
+  │ prev (pointer)│ ───> Trỏ đến Node đứng trước
+  │ item (data)   │ ───> Lưu trữ đối tượng dữ liệu
+  │ next (pointer)│ ───> Trỏ đến Node đứng sau
+  └───────────────┘
+  ```
+* **Chi phí bộ nhớ (Memory Overhead)**:
+  * Mỗi phần tử trong `LinkedList` tốn nhiều RAM hơn `ArrayList` vì ngoài dữ liệu thực tế, JVM phải cấp phát thêm bộ nhớ cho 2 tham chiếu (`prev` và `next`) và metadata của đối tượng Node (Object Header).
+* **CPU Cache Miss**:
+  * Khi duyệt `LinkedList`, CPU phải nhảy từ địa chỉ vùng nhớ này sang địa chỉ vùng nhớ khác thông qua các con trỏ. Điều này gây ra nhiều **CPU Cache Miss**, làm chậm tốc độ duyệt phần tử đáng kể so với việc duyệt mảng.
+
+#### 3. Bảng băm & Giải quyết đụng độ (Hash Table & Collision Resolution) — Nền tảng của `HashMap` / `HashSet`
+* **Cơ chế ánh xạ**: Sử dụng hàm băm (Hash Function) để chuyển đổi một Key bất kỳ thành chỉ số (index) của mảng bucket để lưu trữ giá trị.
+  $$\text{Index} = \text{hash}(key) \ \& \ (n - 1) \quad (\text{với } n \text{ là số lượng bucket})$$
+* **Sự cố đụng độ băm (Hash Collision)**:
+  * Xảy ra khi hai Key khác nhau có cùng giá trị băm và được ánh xạ vào cùng một index trong mảng bucket.
+* **Giải pháp trong Java (Cải tiến cực lớn từ Java 8)**:
+  * **Trước Java 8 (Chaining)**: Sử dụng phương pháp **Chuỗi liên kết**. Tại mỗi index của bucket là một danh sách liên kết đơn. Khi xảy ra đụng độ, Node mới sẽ được chèn vào LinkedList. Nếu bị đụng độ quá nhiều (bad hash code), thời gian tìm kiếm sẽ bị thoái hóa từ $O(1)$ thành $O(n)$.
+  * **Từ Java 8 trở đi (Treeify - Hóa cây)**:
+    * Khi số lượng Node tại một bucket vượt quá **`TREEIFY_THRESHOLD = 8`** và tổng số bucket của map tối thiểu là **`MIN_TREEIFY_CAPACITY = 64`**, Java sẽ tự động chuyển đổi danh sách liên kết tại bucket đó thành **Cây đỏ-đen (Red-Black Tree)**.
+    * Khi kích thước tại bucket giảm xuống dưới **`UNTREEIFY_THRESHOLD = 6`** (do bị xóa bớt), cây đỏ-đen sẽ được biến đổi ngược lại thành danh sách liên kết.
+    * Cơ chế này giúp khống chế thời gian tìm kiếm trong trường hợp đụng độ tệ nhất chỉ mất **$O(\log n)$** thay vì $O(n)$, ngăn ngừa được các cuộc tấn công từ chối dịch vụ DOS bằng thuật toán băm (Hash DoS Attack).
+* **Load Factor (Hệ số tải)**:
+  * Mặc định là **`0.75`** (tức là khi số lượng phần tử vượt quá 75% kích thước mảng bucket hiện tại).
+  * Lúc này, Map sẽ tiến hành kích hoạt cơ chế **Rehash (Băm lại)**: tạo một mảng bucket mới có kích thước gấp đôi mảng cũ, tính toán lại vị trí mới cho tất cả các phần tử và phân phối lại chúng để tránh đụng độ.
+
+#### 4. Cây đỏ-đen (Red-Black Tree) — Nền tảng của `TreeMap` / `TreeSet`
+* **Bản chất**: Là một loại **Cây tìm kiếm nhị phân tự cân bằng (Self-balancing Binary Search Tree - BST)**.
+* **Tại sao không dùng Cây tìm kiếm nhị phân (BST) thông thường?**
+  * Đối với BST thường, nếu ta chèn các phần tử theo thứ tự đã sắp xếp sẵn (ví dụ: 1, 2, 3, 4, 5), cây sẽ bị lệch hoàn toàn về một phía và biến thành một danh sách liên kết đơn. Khi đó, thao tác tìm kiếm bị thoái hóa từ $O(\log n)$ thành $O(n)$.
+* **Cơ chế tự cân bằng của Cây đỏ-đen**:
+  * Các Node được gán nhãn màu: **Đỏ** hoặc **Đen**.
+  * Cây áp dụng 5 quy tắc nghiêm ngặt về màu sắc để đảm bảo đường đi dài nhất từ gốc đến lá không bao giờ vượt quá 2 lần đường đi ngắn nhất.
+  * Khi chèn hoặc xóa phần tử làm mất tính cân bằng, cây sẽ thực hiện các thao tác **Xoay cây (Rotations - Left/Right Rotate)** và **Đổi màu Node (Recoloring)** để thiết lập lại trạng thái cân bằng.
+  * Nhờ vậy, chiều cao của cây luôn được giữ ở mức $O(\log n)$, đảm bảo mọi thao tác tìm kiếm, chèn, xóa luôn ổn định ở mức độ phức tạp **$O(\log n)$**.
+
+#### 5. Ngăn xếp & Hàng đợi (Stack & Queue)
+* **Stack (LIFO - Last In First Out)**:
+  * Lưu trữ dữ liệu theo nguyên tắc vào sau ra trước.
+  * Lớp `java.util.Stack` trong Java kế thừa từ `Vector` và sử dụng cơ chế đồng bộ hóa `synchronized`. Điều này gây thắt nút cổ chai về hiệu năng (performance bottleneck) trong môi trường đơn luồng. Do đó, trong thực tế phát triển phần mềm hiện đại, nếu cần cấu trúc Stack, các lập trình viên được khuyên dùng giao diện `Deque` cài đặt qua **`ArrayDeque`** (hiệu năng tốt hơn mảng động thông thường vì không bị đồng bộ hóa không cần thiết).
+* **Queue (FIFO - First In First Out)**:
+  * Lưu trữ dữ liệu theo nguyên tắc vào trước ra trước.
+  * Cài đặt bằng `LinkedList` (khi cần tận dụng chèn/xóa hai đầu liên tục) hoặc `ArrayDeque` (hàng đợi vòng bằng mảng tĩnh giúp tối ưu bộ nhớ).
+  * **PriorityQueue (Hàng đợi ưu tiên)**: Không hoạt động theo FIFO thông thường mà dựa trên cấu trúc **Heap (Min-Heap hoặc Max-Heap)**. Phần tử có độ ưu tiên cao nhất (hoặc nhỏ nhất theo cách định nghĩa) sẽ luôn được đưa lên đỉnh cây để lấy ra trước tiên với thời gian $O(1)$, thao tác chèn/xóa phần tử mất $O(\log n)$.
+
+---
+
 ## ⚙️ 16. OOP Best Practices
 
 - Dùng **Encapsulation** để bảo vệ dữ liệu
